@@ -20,6 +20,7 @@ export const CollectionAlbum: React.FC = () => {
   const [selectedSet, setSelectedSet] = useState<string>('ALL');
   const [selectedRarity, setSelectedRarity] = useState<string>('ALL');
   const [ownershipFilter, setOwnershipFilter] = useState<'ALL' | 'OWNED' | 'MISSING'>('ALL');
+  const [selected30thSubset, setSelected30thSubset] = useState<'ALL' | 'MAIN' | 'PIKACHU' | 'SECRET' | 'RGB' | 'CLASSIC' | 'ENERGY'>('ALL');
   const [inspectedCard, setInspectedCard] = useState<CardPrinting | null>(null);
 
   // Filtered Cards with strict unique card ID deduplication
@@ -38,6 +39,24 @@ export const CollectionAlbum: React.FC = () => {
       if (selectedSet !== 'ALL' && card.setId !== selectedSet) return false;
       if (selectedRarity !== 'ALL' && card.rarity !== selectedRarity) return false;
 
+      // 30th Celebration Master Set Subsets Filtering
+      if (selectedSet === 'meg-30th-en' && selected30thSubset !== 'ALL') {
+        const num = parseInt(card.setNumber, 10);
+        if (selected30thSubset === 'MAIN') {
+          if (!(/^\d{3}$/.test(card.setNumber) && num >= 1 && num <= 128)) return false;
+        } else if (selected30thSubset === 'PIKACHU') {
+          if (!card.name.toLowerCase().includes('pikachu') && !card.id.includes('pika')) return false;
+        } else if (selected30thSubset === 'SECRET') {
+          if (!(/^\d{3}$/.test(card.setNumber) && num >= 129 && num <= 158)) return false;
+        } else if (selected30thSubset === 'RGB') {
+          if (!card.setNumber.includes('RGB')) return false;
+        } else if (selected30thSubset === 'CLASSIC') {
+          if (!card.setNumber.startsWith('C')) return false;
+        } else if (selected30thSubset === 'ENERGY') {
+          if (!card.setNumber.startsWith('E')) return false;
+        }
+      }
+
       if (searchQuery.trim() !== '') {
         const q = searchQuery.toLowerCase();
         const matchesName = card.name.toLowerCase().includes(q);
@@ -48,7 +67,7 @@ export const CollectionAlbum: React.FC = () => {
 
       return true;
     });
-  }, [searchQuery, selectedSet, selectedRarity, ownershipFilter, getCardCount]);
+  }, [searchQuery, selectedSet, selectedRarity, ownershipFilter, selected30thSubset, getCardCount]);
 
   // Overall Statistics with unique card printings
   const uniquePrintings = useMemo(() => {
@@ -219,6 +238,38 @@ export const CollectionAlbum: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* 30th Celebration Master Set Subsets Filter Row */}
+      {selectedSet === 'meg-30th-en' && (
+        <div className="flex flex-wrap items-center gap-2 p-2.5 rounded-2xl border border-amber-500/30 bg-amber-500/5 shadow-md">
+          <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 pl-2 mr-1">
+            Nhóm thẻ Master Set (199):
+          </span>
+          {(
+            [
+              { id: 'ALL', label: 'Tất cả (199)' },
+              { id: 'MAIN', label: 'Main Set #001-128 (128)' },
+              { id: 'PIKACHU', label: '⚡ 30 Pikachu (30)' },
+              { id: 'SECRET', label: 'Secret Rares #129-158 (30)' },
+              { id: 'RGB', label: '🔴🟢🔵 RGB Mew (3)' },
+              { id: 'CLASSIC', label: 'Classic Collection (30)' },
+              { id: 'ENERGY', label: 'Foil Energy (8)' },
+            ] as const
+          ).map((sub) => (
+            <button
+              key={sub.id}
+              onClick={() => setSelected30thSubset(sub.id)}
+              className={`rounded-xl px-3 py-1.5 text-xs font-bold transition ${
+                selected30thSubset === sub.id
+                  ? 'bg-amber-500 text-black shadow-md'
+                  : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700'
+              }`}
+            >
+              {sub.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Cards Grid Album Binder */}
       <div className="rounded-3xl border border-zinc-800/90 bg-zinc-950 p-6 sm:p-8 min-h-[480px]">

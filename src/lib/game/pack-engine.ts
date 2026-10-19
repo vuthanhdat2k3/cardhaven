@@ -71,9 +71,9 @@ function getRandomItem<T>(arr: T[]): T {
 export function normalizeCharacterKey(card: CardPrinting): string {
   if (card.cardType === 'energy') return `ENERGY_${card.id}`;
   if (card.id.includes('code') || card.name.includes('Code Card')) return `CODE_${card.id}`;
-  // For Pikachu variants, allow distinct named variants like Birthday Pikachu vs Flying Pikachu V
+  // For Pikachu, normalize all variants to PIKACHU to ensure exactly 1 Pikachu per pack
   if (card.name.includes('Pikachu')) {
-    return card.name.toUpperCase();
+    return 'PIKACHU';
   }
   // Strip parentheses and subtitles: e.g. "Lugia (30th Celebration Classic)" -> "LUGIA"
   const baseName = card.name.split('(')[0].replace(/ex|EX|VMAX|VSTAR|V-UNION/gi, '').trim().toUpperCase();
@@ -164,9 +164,9 @@ export function openSingleBooster(
     } else if (slot.poolCategory === 'energy') {
       picked = pickStrictlyUnique(energies, fallbackCards, allCards, seenIds, seenCharacters);
     } else if (slot.poolCategory === 'pikachu_variant') {
-      // 30th Celebration Guaranteed Pikachu Slot
+      // 30th Celebration Guaranteed Pikachu Slot: Strictly pick from 30 Pikachu variants
       const candidates = pikachuVariants.length > 0 ? pikachuVariants : rares;
-      picked = pickStrictlyUnique(candidates, nonSpecialCards, allCards, seenIds, seenCharacters);
+      picked = pickStrictlyUnique(candidates, pikachuVariants, pikachuVariants, seenIds, seenCharacters);
     } else if (slot.poolCategory === 'code_card') {
       // Pokémon TCG Live Code Card Slot
       if (codeCards.length > 0) {
@@ -177,7 +177,7 @@ export function openSingleBooster(
           cardId: `c-${template.setId}-code`,
           setId: template.setId,
           setNumber: 'LIVE',
-          totalInSet: 50,
+          totalInSet: 199,
           name: 'Pokémon TCG Live Code Card',
           rarity: 'common',
           language: 'EN',
@@ -185,7 +185,7 @@ export function openSingleBooster(
           isHolo: false,
           isSecretRare: false,
           foilPattern: 'none',
-          estimatedValue: 0.25,
+          estimatedValue: 0.00,
           flavorText: `Redeem code at pokemon.com/tcglive to unlock one ${template.name} in Pokémon TCG Live!`,
           cardType: 'trainer_item',
           accentColor: '#10b981',
@@ -194,9 +194,12 @@ export function openSingleBooster(
       }
     } else if (slot.poolCategory === 'reverse_or_rare') {
       if (template.setId === 'meg-30th-en') {
-        // 30th Celebration Holo slots: Pick distinct 30th Holo Pokémon
-        const holos = nonSpecialCards.filter((c) => c.rarity === 'holo_rare' && !c.name.toLowerCase().includes('pikachu'));
-        picked = pickStrictlyUnique(holos, nonSpecialCards, allCards, seenIds, seenCharacters);
+        // 30th Celebration Holo slots: Pick distinct 30th Holo Pokémon from Main Set (031-078)
+        const holos = nonSpecialCards.filter(
+          (c) => c.rarity === 'holo_rare' && !c.name.toLowerCase().includes('pikachu') && !c.setNumber.startsWith('E')
+        );
+        const nonPikachuFallback = nonSpecialCards.filter((c) => !c.name.toLowerCase().includes('pikachu'));
+        picked = pickStrictlyUnique(holos, nonPikachuFallback, nonPikachuFallback, seenIds, seenCharacters);
       } else {
         const targetRarity = pickWeightedRarity(REVERSE_SLOT_WEIGHTS);
         const candidates = nonSpecialCards.filter((c) => c.rarity === targetRarity);
@@ -204,16 +207,51 @@ export function openSingleBooster(
       }
     } else if (slot.poolCategory === 'rare_or_higher') {
       // Use specialized 30th Celebration community hit weights for meg-30th-en
-      const hitWeights = template.setId === 'meg-30th-en' ? CELEBRATION_30TH_HIT_WEIGHTS : HIT_SLOT_WEIGHTS;
-      const targetRarity = forcedHitRarity || pickWeightedRarity(hitWeights);
-      const matching = nonSpecialCards.filter((c) => c.rarity === targetRarity && !c.name.toLowerCase().includes('pikachu'));
-      picked = pickStrictlyUnique(
-        matching.length > 0 ? matching : rares,
-        rares.length > 0 ? rares : nonSpecialCards,
-        allCards,
-        seenIds,
-        seenCharacters
-      );
+      if (template.setId === 'meg-30th-en') {
+        const targetRarity = forcedHitRarity || pickWeightedRarity(CELEBRATION_30TH_HIT_WEIGHTS);
+        let candidates: CardPrinting[] = [];
+        if (targetRarity === 'double_rare') {
+          // Double Rare: Mega EX cards from Main Set (079-128)
+          candidates = nonSpecialCards.filter((c) => c.rarity === 'double_rare' && !c.name.toLowerCase().includes('pikachu'));
+        } else if (targetRarity === 'rare') {
+          // Illustration Rare (AR) (055-078)
+          candidates = nonSpecialCards.filter((c) => c.rarity === 'rare' && !c.name.toLowerCase().includes('pikachu'));
+        } else if (targetRarity === 'ultra_rare') {
+          // Classic Collection subset (C01-C30)
+          candidates = nonSpecialCards.filter((c) => c.setNumber.startsWith('C') && !c.name.toLowerCase().includes('pikachu'));
+        } else if (targetRarity === 'special_illustration_rare') {
+          // Secret Rare SAR Alt Arts (129-155)
+          candidates = nonSpecialCards.filter(
+            (c) => c.rarity === 'special_illustration_rare' && !c.name.toLowerCase().includes('pikachu')
+          );
+        } else if (targetRarity === 'hyper_rare') {
+          // Futuristic Rares (RGB Mew Trio by YOSHIROTTEN) and Gold Secret Rares (156-158)
+          candidates = nonSpecialCards.filter((c) => c.rarity === 'hyper_rare' && !c.name.toLowerCase().includes('pikachu'));
+        } else {
+          // Non-hit Holo Rare from Main Set
+          candidates = nonSpecialCards.filter(
+            (c) => c.rarity === 'holo_rare' && !c.name.toLowerCase().includes('pikachu') && !c.setNumber.startsWith('E')
+          );
+        }
+        const nonPikachuFallback = nonSpecialCards.filter((c) => !c.name.toLowerCase().includes('pikachu'));
+        picked = pickStrictlyUnique(
+          candidates.length > 0 ? candidates : nonPikachuFallback,
+          nonPikachuFallback,
+          nonPikachuFallback,
+          seenIds,
+          seenCharacters
+        );
+      } else {
+        const targetRarity = forcedHitRarity || pickWeightedRarity(HIT_SLOT_WEIGHTS);
+        const matching = nonSpecialCards.filter((c) => c.rarity === targetRarity);
+        picked = pickStrictlyUnique(
+          matching.length > 0 ? matching : rares,
+          rares.length > 0 ? rares : nonSpecialCards,
+          allCards,
+          seenIds,
+          seenCharacters
+        );
+      }
     }
 
     if (!picked) {
