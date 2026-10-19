@@ -1,0 +1,147 @@
+'use client';
+
+import React from 'react';
+import { Product } from '@/types';
+import { POKEMON_SETS } from '@/data/sets';
+import { ShoppingCart, Info, Star } from 'lucide-react';
+
+interface ProductCardProps {
+  product: Product;
+  onInspect: (product: Product) => void;
+  onQuickBuy: (product: Product) => void;
+}
+
+export const ProductCard: React.FC<ProductCardProps> = ({ product, onInspect, onQuickBuy }) => {
+  const setInfo = POKEMON_SETS.find((s) => s.id === product.setId);
+
+  // Icon and visual container style based on ProductType
+  const typeIcons: Record<string, string> = {
+    booster_pack: '🎴',
+    booster_box: '📦',
+    elite_trainer_box: '🎁',
+    collector_tin: '🛡️',
+    bundle: '👝',
+  };
+
+  const isLowStock = product.stock > 0 && product.stock <= 10;
+  const isOutOfStock = product.stock <= 0;
+
+  return (
+    <div className="group relative flex flex-col justify-between rounded-2xl border border-zinc-800/90 bg-gradient-to-b from-zinc-900/90 via-zinc-900/70 to-zinc-950 p-4 shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-amber-500/50 hover:shadow-2xl hover:shadow-amber-500/10">
+      {/* Top Badges */}
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center space-x-1.5">
+          {product.badge && (
+            <span className="rounded-md bg-amber-500/20 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-amber-300 border border-amber-500/40">
+              {product.badge}
+            </span>
+          )}
+          <span
+            className={`rounded-md px-1.5 py-0.5 text-[10px] font-bold ${
+              product.language === 'JP'
+                ? 'bg-rose-950/80 text-rose-300 border border-rose-800/50'
+                : 'bg-blue-950/80 text-blue-300 border border-blue-800/50'
+            }`}
+          >
+            {product.language}
+          </span>
+        </div>
+
+        <div className="flex items-center space-x-1 text-xs text-amber-400">
+          <Star className="h-3.5 w-3.5 fill-amber-400" />
+          <span className="font-bold text-zinc-300">{product.rating.toFixed(1)}</span>
+        </div>
+      </div>
+
+      {/* Visual Product Display (Foil Wrapper / Box) */}
+      <div
+        onClick={() => onInspect(product)}
+        className="relative mx-auto flex h-44 w-full cursor-pointer items-center justify-center rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950/90 shadow-inner group-hover:border-amber-500/30 transition"
+        style={{
+          background: `radial-gradient(circle at 50% 40%, ${product.accentColor}33 0%, #0d0f12 85%)`,
+        }}
+      >
+        {/* Glow & Spotlight */}
+        <div className="absolute inset-0 shop-spotlight pointer-events-none" />
+
+        {/* 3D Box / Pack Graphic */}
+        <div className="relative flex flex-col items-center transform transition-transform duration-300 group-hover:scale-108">
+          <span className="text-6xl drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]">
+            {typeIcons[product.productType] || '🎴'}
+          </span>
+          <span className="mt-2 text-[11px] font-black tracking-widest text-zinc-300 uppercase">
+            {setInfo?.code || 'TCG'}
+          </span>
+        </div>
+
+        {/* Pack Count Pill */}
+        <div className="absolute bottom-2 right-2 rounded-lg bg-black/70 px-2 py-0.5 text-[10px] font-bold text-amber-300 border border-white/10 backdrop-blur-xs">
+          {product.contents.boosterPacksCount} {product.contents.boosterPacksCount > 1 ? 'Packs' : 'Pack'}
+        </div>
+      </div>
+
+      {/* Product Info */}
+      <div className="mt-3">
+        <p className="text-[11px] font-semibold text-amber-400/90 uppercase tracking-wider">
+          {setInfo?.name || 'Expansion'}
+        </p>
+        <h3
+          onClick={() => onInspect(product)}
+          className="text-sm font-bold text-zinc-100 hover:text-amber-300 cursor-pointer line-clamp-1 transition"
+        >
+          {product.name}
+        </h3>
+        <p className="text-xs text-zinc-400 line-clamp-2 mt-1 min-h-[32px]">
+          {product.description}
+        </p>
+      </div>
+
+      {/* Stock Status Bar */}
+      <div className="mt-2 pt-2 border-t border-zinc-800/80">
+        <div className="flex items-center justify-between text-[11px] mb-1">
+          <span className="text-zinc-400">Kho hàng:</span>
+          {isOutOfStock ? (
+            <span className="font-bold text-red-500">Hết hàng</span>
+          ) : isLowStock ? (
+            <span className="font-bold text-amber-400 animate-pulse">Chỉ còn {product.stock}!</span>
+          ) : (
+            <span className="font-medium text-emerald-400">{product.stock} có sẵn</span>
+          )}
+        </div>
+      </div>
+
+      {/* Price & Actions */}
+      <div className="mt-3 flex items-center justify-between">
+        <div>
+          <span className="text-[10px] text-zinc-400 block uppercase font-medium">Giá bán</span>
+          <span className="text-lg font-black text-amber-300">
+            ${product.price.toFixed(2)}
+          </span>
+        </div>
+
+        <div className="flex items-center space-x-1.5">
+          <button
+            onClick={() => onInspect(product)}
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-zinc-700 bg-zinc-800/80 text-zinc-300 hover:bg-zinc-700 hover:text-white transition"
+            title="Xem chi tiết sản phẩm"
+          >
+            <Info className="h-4 w-4" />
+          </button>
+
+          <button
+            onClick={() => onQuickBuy(product)}
+            disabled={isOutOfStock}
+            className={`flex items-center space-x-1.5 rounded-xl px-3 py-2 text-xs font-bold transition active:scale-95 ${
+              isOutOfStock
+                ? 'bg-zinc-800 text-zinc-500 cursor-not-allowed'
+                : 'bg-gradient-to-r from-amber-500 to-amber-600 text-black font-extrabold hover:from-amber-400 hover:to-amber-500 shadow-lg shadow-amber-500/20'
+            }`}
+          >
+            <ShoppingCart className="h-3.5 w-3.5" />
+            <span>Mua</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};

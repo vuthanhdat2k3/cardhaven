@@ -1,0 +1,75 @@
+import { PackTemplate } from '@/types';
+
+export const PACK_TEMPLATES: PackTemplate[] = [
+  {
+    id: 'pt-sv-151-en',
+    setId: 'sv-151-en',
+    name: 'Scarlet & Violet: 151 Booster Pack',
+    cardsPerPack: 10,
+    slots: [
+      { slotIndex: 0, name: 'Common Slot 1', poolCategory: 'common' },
+      { slotIndex: 1, name: 'Common Slot 2', poolCategory: 'common' },
+      { slotIndex: 2, name: 'Common Slot 3', poolCategory: 'common' },
+      { slotIndex: 3, name: 'Common Slot 4', poolCategory: 'common' },
+      { slotIndex: 4, name: 'Uncommon Slot 1', poolCategory: 'uncommon' },
+      { slotIndex: 5, name: 'Uncommon Slot 2', poolCategory: 'uncommon' },
+      { slotIndex: 6, name: 'Uncommon Slot 3', poolCategory: 'uncommon' },
+      { slotIndex: 7, name: 'Reverse Holo / Parallel Slot', poolCategory: 'reverse_or_rare' },
+      { slotIndex: 8, name: 'Rare / Ultra Rare / SIR Grail Slot', poolCategory: 'rare_or_higher' },
+      { slotIndex: 9, name: 'Basic Energy Slot', poolCategory: 'energy' },
+    ],
+  },
+  {
+    id: 'pt-sv-pre-en',
+    setId: 'sv-pre-en',
+    name: 'Prismatic Evolutions Booster Pack',
+    cardsPerPack: 10,
+    slots: [
+      { slotIndex: 0, name: 'Common Slot 1', poolCategory: 'common' },
+      { slotIndex: 1, name: 'Common Slot 2', poolCategory: 'common' },
+      { slotIndex: 2, name: 'Common Slot 3', poolCategory: 'common' },
+      { slotIndex: 3, name: 'Common Slot 4', poolCategory: 'common' },
+      { slotIndex: 4, name: 'Uncommon Slot 1', poolCategory: 'uncommon' },
+      { slotIndex: 5, name: 'Uncommon Slot 2', poolCategory: 'uncommon' },
+      { slotIndex: 6, name: 'Uncommon Slot 3', poolCategory: 'uncommon' },
+      { slotIndex: 7, name: 'Reverse Holo Slot', poolCategory: 'reverse_or_rare' },
+      { slotIndex: 8, name: 'Eevee Ultra / Stellar SIR Slot', poolCategory: 'rare_or_higher' },
+      { slotIndex: 9, name: 'Basic Energy Slot', poolCategory: 'energy' },
+    ],
+  },
+  {
+    id: 'pt-sv-151-jp',
+    setId: 'sv-151-jp',
+    name: 'Pokémon Card 151 (JP) Booster Pack',
+    cardsPerPack: 7,
+    slots: [
+      { slotIndex: 0, name: 'Common 1', poolCategory: 'common' },
+      { slotIndex: 1, name: 'Common 2', poolCategory: 'common' },
+      { slotIndex: 2, name: 'Common 3', poolCategory: 'common' },
+      { slotIndex: 3, name: 'Uncommon 1', poolCategory: 'uncommon' },
+      { slotIndex: 4, name: 'Uncommon 2', poolCategory: 'uncommon' },
+      { slotIndex: 5, name: 'Masterball / Mirror Slot', poolCategory: 'reverse_or_rare' },
+      { slotIndex: 6, name: 'AR / SAR / SR Climax Slot', poolCategory: 'rare_or_higher' },
+    ],
+  },
+  {
+    id: 'pt-swsh-crz-en',
+    setId: 'swsh-crz-en',
+    name: 'Crown Zenith Booster Pack',
+    cardsPerPack: 10,
+    slots: [
+      { slotIndex: 0, name: 'Common Slot 1', poolCategory: 'common' },
+      { slotIndex: 1, name: 'Common Slot 2', poolCategory: 'common' },
+      { slotIndex: 2, name: 'Common Slot 3', poolCategory: 'common' },
+      { slotIndex: 3, name: 'Common Slot 4', poolCategory: 'common' },
+      { slotIndex: 4, name: 'Uncommon Slot 1', poolCategory: 'uncommon' },
+      { slotIndex: 5, name: 'Uncommon Slot 2', poolCategory: 'uncommon' },
+      { slotIndex: 6, name: 'Uncommon Slot 3', poolCategory: 'uncommon' },
+      { slotIndex: 7, name: 'Galarian Gallery Slot', poolCategory: 'reverse_or_rare' },
+      { slotIndex: 8, name: 'Gold VSTAR / Secret Climax Slot', poolCategory: 'rare_or_higher' },
+      { slotIndex: 9, name: 'Basic Energy Slot', poolCategory: 'energy' },
+    ],
+  },
+];
+
+export const PACK_TEMPLATES_MAP = new Map(PACK_TEMPLATES.map((p) => [p.id, p]));

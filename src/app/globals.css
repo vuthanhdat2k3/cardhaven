@@ -1,26 +1,141 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #0d0f12;
+  --foreground: #f3f4f6;
+  --shop-wood: #1e1713;
+  --shop-brass: #d4af37;
+  --shop-accent: #eab308;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  overflow-x: hidden;
+  user-select: none;
+}
+
+/* Custom Scrollbar for Collector Binders */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #11141a;
+}
+::-webkit-scrollbar-thumb {
+  background: #2b3340;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* 2.5D Hobby Shop Lighting & Atmosphere */
+.shop-wood-shelf {
+  background: linear-gradient(180deg, #382415 0%, #20130a 70%, #150b06 100%);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7), inset 0 2px 2px rgba(255, 255, 255, 0.15);
+}
+
+.shop-wood-edge {
+  background: linear-gradient(90deg, #1d0f07 0%, #4a2f1c 50%, #1d0f07 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 235, 180, 0.2);
+}
+
+.shop-spotlight {
+  background: radial-gradient(circle at 50% 0%, rgba(251, 191, 36, 0.18) 0%, rgba(251, 191, 36, 0.03) 50%, transparent 80%);
+}
+
+.glass-showcase {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(255, 255, 255, 0.02) 100%);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* 3D Perspective Card Container */
+.perspective-container {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Foil and Holographic Shimmer Effects */
+.foil-holo-sheen {
+  background: linear-gradient(
+    115deg,
+    transparent 20%,
+    rgba(255, 255, 255, 0.4) 45%,
+    rgba(255, 220, 100, 0.6) 50%,
+    rgba(255, 255, 255, 0.4) 55%,
+    transparent 80%
+  );
+  background-size: 200% 200%;
+  animation: holoSheen 3.5s ease-in-out infinite alternate;
+  mix-blend-mode: color-dodge;
+  pointer-events: none;
+}
+
+.foil-rainbow-shimmer {
+  background: linear-gradient(
+    125deg,
+    rgba(255, 0, 0, 0.3) 0%,
+    rgba(255, 154, 0, 0.3) 15%,
+    rgba(255, 255, 0, 0.3) 30%,
+    rgba(0, 255, 0, 0.3) 45%,
+    rgba(0, 255, 255, 0.3) 60%,
+    rgba(0, 0, 255, 0.3) 75%,
+    rgba(255, 0, 255, 0.3) 90%
+  );
+  background-size: 300% 300%;
+  animation: rainbowFlow 4s linear infinite;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+}
+
+.foil-gold-glitter {
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.6) 10%, transparent 60%),
+    linear-gradient(45deg, #ffd700 0%, #ffae00 50%, #fff2a8 100%);
+  background-size: 200% 200%;
+  animation: goldPulse 3s ease infinite;
+  mix-blend-mode: color-dodge;
+  pointer-events: none;
+}
+
+@keyframes holoSheen {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 100% 100%; }
+}
+
+@keyframes rainbowFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes goldPulse {
+  0%, 100% { opacity: 0.7; filter: brightness(1); }
+  50% { opacity: 0.95; filter: brightness(1.25); }
+}
+
+/* Foil Tear Animations */
+@keyframes tearLeft {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(-40px) rotate(-15deg); opacity: 0; }
+}
+
+@keyframes tearRight {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(40px) rotate(15deg); opacity: 0; }
+}
+
+.pack-tear-top {
+  animation: tearLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
