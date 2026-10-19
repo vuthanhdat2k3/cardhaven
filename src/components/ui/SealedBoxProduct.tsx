@@ -136,6 +136,33 @@ export const SealedBoxProduct: React.FC<SealedBoxProductProps> = ({
                 SNORLAX EDITION
               </span>
             </div>
+          ) : product.id === 'prod-30th-etb' ? (
+            <div className="flex flex-col items-center">
+              <span className="text-4xl sm:text-5xl drop-shadow-[0_10px_15px_rgba(234,179,8,0.5)] transform group-hover:scale-110 transition duration-300">
+                🎖️
+              </span>
+              <span className="text-[10px] font-black tracking-wider text-amber-300 uppercase mt-1">
+                30TH CELEBRATION
+              </span>
+            </div>
+          ) : product.id === 'prod-30th-box' ? (
+            <div className="flex flex-col items-center">
+              <span className="text-4xl sm:text-5xl drop-shadow-[0_10px_15px_rgba(234,179,8,0.5)] transform group-hover:scale-110 transition duration-300">
+                🐉
+              </span>
+              <span className="text-[10px] font-black tracking-wider text-amber-300 uppercase mt-1">
+                MEGA EVOLUTION DISPLAY
+              </span>
+            </div>
+          ) : product.id === 'prod-pocket-bundle' ? (
+            <div className="flex flex-col items-center">
+              <span className="text-4xl sm:text-5xl drop-shadow-[0_10px_15px_rgba(56,189,248,0.5)] transform group-hover:scale-110 transition duration-300">
+                📱
+              </span>
+              <span className="text-[10px] font-black tracking-wider text-cyan-300 uppercase mt-1">
+                GENETIC APEX BUNDLE
+              </span>
+            </div>
           ) : product.id === 'prod-crz-etb' ? (
             <div className="flex flex-col items-center">
               <span className="text-4xl sm:text-5xl drop-shadow-[0_10px_15px_rgba(234,179,8,0.5)] transform group-hover:scale-110 transition duration-300">

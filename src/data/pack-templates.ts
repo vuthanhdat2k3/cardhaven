@@ -70,6 +70,59 @@ export const PACK_TEMPLATES: PackTemplate[] = [
       { slotIndex: 9, name: 'Basic Energy Slot', poolCategory: 'energy' },
     ],
   },
+  {
+    id: 'pt-meg-30th-en',
+    setId: 'meg-30th-en',
+    name: '30th Celebration: Mega Evolution Booster Pack',
+    cardsPerPack: 6,
+    slots: [
+      { slotIndex: 0, name: '30th Anniversary Holo 1', poolCategory: 'reverse_or_rare' },
+      { slotIndex: 1, name: '30th Anniversary Holo 2', poolCategory: 'reverse_or_rare' },
+      { slotIndex: 2, name: 'Mega Evolution / Classic Holo', poolCategory: 'rare_or_higher' },
+      { slotIndex: 3, name: 'Mega EX / Secret Rare Climax', poolCategory: 'rare_or_higher' },
+      { slotIndex: 4, name: 'Pikachu 30th Anniversary Slot', poolCategory: 'rare_or_higher' },
+      { slotIndex: 5, name: 'Anniversary Foil Energy', poolCategory: 'energy' },
+    ],
+  },
+  {
+    id: 'pt-pocket-charizard',
+    setId: 'pocket-a1-en',
+    name: 'Pocket: Genetic Apex (Charizard Pack)',
+    cardsPerPack: 5,
+    slots: [
+      { slotIndex: 0, name: 'Apex Card 1', poolCategory: 'reverse_or_rare' },
+      { slotIndex: 1, name: 'Apex Card 2', poolCategory: 'reverse_or_rare' },
+      { slotIndex: 2, name: 'Apex Card 3', poolCategory: 'reverse_or_rare' },
+      { slotIndex: 3, name: 'Rare Foil Slot', poolCategory: 'rare_or_higher' },
+      { slotIndex: 4, name: 'Charizard ex / Immersive Slot', poolCategory: 'rare_or_higher' },
+    ],
+  },
+  {
+    id: 'pt-pocket-mewtwo',
+    setId: 'pocket-a1-en',
+    name: 'Pocket: Genetic Apex (Mewtwo Pack)',
+    cardsPerPack: 5,
+    slots: [
+      { slotIndex: 0, name: 'Apex Card 1', poolCategory: 'reverse_or_rare' },
+      { slotIndex: 1, name: 'Apex Card 2', poolCategory: 'reverse_or_rare' },
+      { slotIndex: 2, name: 'Apex Card 3', poolCategory: 'reverse_or_rare' },
+      { slotIndex: 3, name: 'Rare Foil Slot', poolCategory: 'rare_or_higher' },
+      { slotIndex: 4, name: 'Mewtwo ex / Immersive Slot', poolCategory: 'rare_or_higher' },
+    ],
+  },
+  {
+    id: 'pt-pocket-pikachu',
+    setId: 'pocket-a1-en',
+    name: 'Pocket: Genetic Apex (Pikachu Pack)',
+    cardsPerPack: 5,
+    slots: [
+      { slotIndex: 0, name: 'Apex Card 1', poolCategory: 'reverse_or_rare' },
+      { slotIndex: 1, name: 'Apex Card 2', poolCategory: 'reverse_or_rare' },
+      { slotIndex: 2, name: 'Apex Card 3', poolCategory: 'reverse_or_rare' },
+      { slotIndex: 3, name: 'Rare Foil Slot', poolCategory: 'rare_or_higher' },
+      { slotIndex: 4, name: 'Pikachu ex / Immersive Slot', poolCategory: 'rare_or_higher' },
+    ],
+  },
 ];
 
 export const PACK_TEMPLATES_MAP = new Map(PACK_TEMPLATES.map((p) => [p.id, p]));

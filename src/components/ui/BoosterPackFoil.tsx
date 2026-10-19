@@ -42,6 +42,8 @@ export const BoosterPackFoil: React.FC<BoosterPackFoilProps> = ({
   const is151 = product.setId.includes('151');
   const isPrismatic = product.setId.includes('pre');
   const isCrownZenith = product.setId.includes('crz');
+  const is30th = product.setId.includes('30th');
+  const isPocket = product.setId.includes('pocket');
   const hasValidImage = Boolean(product.imageUrl) && !imgError;
 
   return (
@@ -54,6 +56,10 @@ export const BoosterPackFoil: React.FC<BoosterPackFoilProps> = ({
       style={{
         background: hasValidImage
           ? 'transparent'
+          : is30th
+          ? 'linear-gradient(135deg, #18181b 0%, #713f12 40%, #fbbf24 80%, #18181b 100%)'
+          : isPocket
+          ? 'linear-gradient(135deg, #0f172a 0%, #1e3a8a 40%, #0284c7 80%, #0f172a 100%)'
           : is151
           ? isJP
             ? 'linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #064e3b 80%, #022c22 100%)'
@@ -148,11 +154,33 @@ export const BoosterPackFoil: React.FC<BoosterPackFoilProps> = ({
           {/* Collection Mascot Silhouette / Graphic */}
           <div className="relative mb-2">
             <span className="text-5xl sm:text-6xl drop-shadow-[0_10px_15px_rgba(0,0,0,0.9)] transform group-hover:scale-110 transition duration-300 block">
-              {is151 ? (isJP ? '🌸' : '🔥') : isPrismatic ? '✨' : '👑'}
+              {is30th ? '🎖️' : isPocket ? '📱' : is151 ? (isJP ? '🌸' : '🔥') : isPrismatic ? '✨' : '👑'}
             </span>
           </div>
 
           {/* Main Pack Title */}
+          {is30th && (
+            <div className="relative">
+              <h3 className="font-black text-sm tracking-widest text-amber-300 drop-shadow-md uppercase">
+                30TH CELEBRATION
+              </h3>
+              <p className="text-[9px] font-bold text-amber-200 uppercase">
+                MEGA EVOLUTION
+              </p>
+            </div>
+          )}
+
+          {isPocket && (
+            <div className="relative">
+              <h3 className="font-black text-xs tracking-wider text-cyan-300 uppercase">
+                TCG POCKET
+              </h3>
+              <p className="text-[9px] font-bold text-white uppercase">
+                GENETIC APEX
+              </p>
+            </div>
+          )}
+
           {is151 && !isJP && (
             <div className="relative">
               <h3 className="font-black text-2xl tracking-tighter text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
@@ -204,6 +232,20 @@ export const BoosterPackFoil: React.FC<BoosterPackFoilProps> = ({
             <div className="text-[9px] font-bold text-zinc-300 flex justify-between px-1">
               <span>1パック / 7枚入り</span>
               <span className="text-emerald-400 font-mono">SV2a</span>
+            </div>
+          ) : is30th ? (
+            <div className="flex flex-col items-center">
+              <span className="font-black text-[9px] tracking-widest text-amber-300 uppercase">
+                6 ALL-FOIL CARDS
+              </span>
+              <span className="text-[8px] text-zinc-400 font-mono">30TH ANNIVERSARY</span>
+            </div>
+          ) : isPocket ? (
+            <div className="flex flex-col items-center">
+              <span className="font-black text-[9px] tracking-widest text-cyan-300 uppercase">
+                5 DIGITAL CARDS
+              </span>
+              <span className="text-[8px] text-zinc-400 font-mono">GENETIC APEX</span>
             </div>
           ) : (
             <div className="flex flex-col items-center">

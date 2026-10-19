@@ -54,6 +54,32 @@ export const POKEMON_SETS: PokemonSet[] = [
     symbol: '👑',
     accentGradient: 'linear-gradient(135deg, #f59e0b, #d97706)',
   },
+  {
+    id: 'meg-30th-en',
+    code: '30TH',
+    name: '30th Celebration (Mega Evolution)',
+    series: 'Mega Evolution Series',
+    releaseYear: 2026,
+    totalCards: 50,
+    language: 'EN',
+    badgeColor: 'from-amber-400 via-yellow-500 to-amber-700',
+    description: 'The monumental 30th Anniversary milestone expansion featuring the return of Mega Evolution, all-foil packs, guaranteed Pikachu 30th Rare, and legendary Mega EX.',
+    symbol: '🎖️',
+    accentGradient: 'linear-gradient(135deg, #f59e0b, #b45309)',
+  },
+  {
+    id: 'pocket-a1-en',
+    code: 'A1',
+    name: 'Pokémon TCG Pocket: Genetic Apex',
+    series: 'Pokémon Pocket',
+    releaseYear: 2024,
+    totalCards: 226,
+    language: 'EN',
+    badgeColor: 'from-cyan-500 to-blue-600',
+    description: 'The viral digital phenomenon with 5-card booster packs, breathtaking Immersive 3D Art cards, and apex ex Pokémon.',
+    symbol: '📱',
+    accentGradient: 'linear-gradient(135deg, #06b6d4, #2563eb)',
+  },
 ];
 
 export const SETS_MAP = new Map(POKEMON_SETS.map((s) => [s.id, s]));

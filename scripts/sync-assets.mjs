@@ -23,6 +23,22 @@ const PACK_ASSETS = [
     name: 'swsh-crz-pack.webp',
     url: 'https://raw.githubusercontent.com/1niceroli/ptcg-assets/master/swsh12pt5/packshots/Crown_Zenith_Booster.webp',
   },
+  {
+    name: 'meg-30th-pack.png',
+    url: 'https://raw.githubusercontent.com/1niceroli/ptcg-assets/master/me6pt5/packshots/Pokemon_TCG_30th_Celebration_Booster_Wrap.png',
+  },
+  {
+    name: 'pocket-charizard-pack.png',
+    url: 'https://raw.githubusercontent.com/1niceroli/ptcg-assets/master/tcgp1/packshots/A1_Booster_Charizard_EN.png',
+  },
+  {
+    name: 'pocket-mewtwo-pack.png',
+    url: 'https://raw.githubusercontent.com/1niceroli/ptcg-assets/master/tcgp1/packshots/A1_Booster_Mewtwo_EN.png',
+  },
+  {
+    name: 'pocket-pikachu-pack.png',
+    url: 'https://raw.githubusercontent.com/1niceroli/ptcg-assets/master/tcgp1/packshots/A1_Booster_Pikachu_EN.png',
+  },
 ];
 
 const BOX_ASSETS = [
@@ -49,6 +65,22 @@ const BOX_ASSETS = [
   {
     name: 'sv-151-upc.png',
     url: 'https://raw.githubusercontent.com/1niceroli/ptcg-assets/master/sv3pt5/ultra-premium-collection.png',
+  },
+  {
+    name: 'meg-30th-etb.png',
+    url: 'https://raw.githubusercontent.com/1niceroli/ptcg-assets/master/me6pt5/elite-trainer-box.png',
+  },
+  {
+    name: 'meg-30th-box.png',
+    url: 'https://raw.githubusercontent.com/1niceroli/ptcg-assets/master/me1/display.png',
+  },
+  {
+    name: 'pocket-bundle.png',
+    url: 'https://raw.githubusercontent.com/1niceroli/ptcg-assets/master/tcgp1/booster-bundle.png',
+  },
+  {
+    name: 'pocket-box.png',
+    url: 'https://raw.githubusercontent.com/1niceroli/ptcg-assets/master/tcgp1/display.png',
   },
 ];
 
@@ -79,6 +111,22 @@ const CARD_ASSETS = [
   { name: 'sv-pre-040.webp', url: 'https://assets.tcgdex.net/en/sv/sv08.5/040/high.webp' },
   { name: 'sv-pre-168.webp', url: 'https://assets.tcgdex.net/en/sv/sv08.5/168/high.webp' },
   { name: 'sv-pre-175.webp', url: 'https://assets.tcgdex.net/en/sv/sv08.5/175/high.webp' },
+  // 30th Celebration (Mega Evolution Series)
+  { name: 'meg-30th-001.png', url: 'https://images.pokemontcg.io/cel25/5_hires.png' },
+  { name: 'meg-30th-006.webp', url: 'https://assets.tcgdex.net/en/xy/g1/12/high.webp' },
+  { name: 'meg-30th-098.webp', url: 'https://assets.tcgdex.net/en/xy/xy6/76/high.webp' },
+  { name: 'meg-30th-150.webp', url: 'https://assets.tcgdex.net/en/xy/xy8/159/high.webp' },
+  { name: 'meg-30th-113.webp', url: 'https://assets.tcgdex.net/en/xy/xy3/113/high.webp' },
+  { name: 'meg-30th-121.webp', url: 'https://assets.tcgdex.net/en/xy/xy4/121/high.webp' },
+  { name: 'meg-30th-025.png', url: 'https://images.pokemontcg.io/cel25/25_hires.png' },
+  { name: 'meg-30th-022.webp', url: 'https://assets.tcgdex.net/en/swsh/cel25/22/high.webp' },
+  // Pokémon TCG Pocket: Genetic Apex
+  { name: 'pocket-a1-001.webp', url: 'https://assets.tcgdex.net/en/sv/sv03.5/199/high.webp' },
+  { name: 'pocket-a1-002.webp', url: 'https://assets.tcgdex.net/ja/SV/SV2a/183/high.webp' },
+  { name: 'pocket-a1-003.webp', url: 'https://assets.tcgdex.net/en/sv/sv03.5/173/high.webp' },
+  { name: 'pocket-a1-004.webp', url: 'https://assets.tcgdex.net/en/swsh/swsh12.5/GG44/high.webp' },
+  { name: 'pocket-a1-005.webp', url: 'https://assets.tcgdex.net/en/sv/sv03.5/149/high.webp' },
+  { name: 'pocket-a1-006.webp', url: 'https://assets.tcgdex.net/en/sv/sv03.5/006/high.webp' },
   // Basic Energy
   { name: 'energy-grass.png', url: 'https://images.pokemontcg.io/sve/1_hires.png' },
   { name: 'energy-fire.png', url: 'https://images.pokemontcg.io/sve/2_hires.png' },
