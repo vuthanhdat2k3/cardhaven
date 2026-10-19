@@ -102,7 +102,11 @@ export const HistoryView: React.FC = () => {
                     >
                       <span className="text-2xl block">{res.printing.illustrationTheme}</span>
                       <p className="font-semibold text-zinc-200 line-clamp-1">{res.printing.name}</p>
-                      <p className="text-[9px] font-bold text-amber-400">${res.printing.estimatedValue.toFixed(2)}</p>
+                      {res.printing.estimatedValue > 0 && !['common', 'uncommon'].includes(res.printing.rarity) ? (
+                        <p className="text-[9px] font-bold text-emerald-400">${res.printing.estimatedValue.toFixed(2)}</p>
+                      ) : (
+                        <p className="text-[8px] text-zinc-600">—</p>
+                      )}
                     </div>
                   ))}
                 </div>

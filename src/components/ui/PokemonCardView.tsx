@@ -362,13 +362,26 @@ export const PokemonCardView: React.FC<PokemonCardViewProps> = ({
               <span className="border border-zinc-700 px-0.5 text-zinc-400">[G]</span>
             </div>
 
-            <span className="text-emerald-400 font-sans font-bold">
-              ${card.estimatedValue.toFixed(2)}
-            </span>
+            {/* Display market price ONLY on valuable rare/chase cards */}
+            {card.estimatedValue > 0 && !['common', 'uncommon'].includes(card.rarity) && (
+              <span className="text-emerald-400 font-sans font-bold">
+                ${card.estimatedValue.toFixed(2)}
+              </span>
+            )}
           </div>
         </div>
 
       </div>
+      )}
+
+      {/* Floating Market Price Badge on High-Res Scanned Cards for valuable hits */}
+      {hasValidImage && card.estimatedValue >= 1.00 && !['common', 'uncommon'].includes(card.rarity) && (
+        <div className="absolute bottom-2 right-2 z-30 pointer-events-none">
+          <div className="rounded-md bg-black/85 backdrop-blur-md px-1.5 py-0.5 text-[9px] font-black text-emerald-400 border border-emerald-500/40 shadow-lg flex items-center space-x-0.5">
+            <span className="text-[7.5px] text-zinc-400">TCG</span>
+            <span>${card.estimatedValue.toFixed(2)}</span>
+          </div>
+        </div>
       )}
 
       {/* Duplicate Count Badge */}

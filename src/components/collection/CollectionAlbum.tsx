@@ -290,8 +290,12 @@ export const CollectionAlbum: React.FC = () => {
                   <span className="font-bold text-emerald-400">{getCardCount(inspectedCard.id)} thẻ</span>
                 </div>
                 <div className="flex justify-between pt-2 border-t border-zinc-800">
-                  <span className="text-zinc-400 font-bold">Giá thị trường ước tính:</span>
-                  <span className="text-base font-black text-amber-300">${inspectedCard.estimatedValue.toFixed(2)}</span>
+                  <span className="text-zinc-400 font-bold">Giá thị trường TCGplayer:</span>
+                  {inspectedCard.estimatedValue > 0 && !['common', 'uncommon'].includes(inspectedCard.rarity) ? (
+                    <span className="text-base font-black text-emerald-400">${inspectedCard.estimatedValue.toFixed(2)}</span>
+                  ) : (
+                    <span className="text-xs text-zinc-500 italic">Thẻ phổ thông (Bulk card)</span>
+                  )}
                 </div>
               </div>
 

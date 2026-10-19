@@ -467,9 +467,13 @@ export const PackOpeningStudio: React.FC<PackOpeningStudioProps> = ({
                 <div>
                   <span className="text-[10px] uppercase font-bold text-amber-400">Top Pull Đẹp Nhất</span>
                   <h4 className="text-base font-black text-white">{session.topPull.name}</h4>
-                  <p className="text-xs text-amber-300 font-bold">
-                    Trị giá ước tính: ${session.topPull.estimatedValue.toFixed(2)}
-                  </p>
+                  {session.topPull.estimatedValue > 0 && !['common', 'uncommon'].includes(session.topPull.rarity) ? (
+                    <p className="text-xs text-amber-300 font-bold">
+                      Trị giá thị trường: ${session.topPull.estimatedValue.toFixed(2)}
+                    </p>
+                  ) : (
+                    <p className="text-xs text-zinc-500 italic">Thẻ phổ thông</p>
+                  )}
                 </div>
               </div>
 
@@ -481,22 +485,32 @@ export const PackOpeningStudio: React.FC<PackOpeningStudioProps> = ({
 
             {/* Grid of All Cards Pulled */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 w-full">
-              {session.cards.map((res, idx) => (
-                <div key={idx} className="relative flex flex-col items-center">
-                  <PokemonCardView
-                    card={res.printing}
-                    isOwned={true}
-                    interactive={false}
-                    size="md"
-                    showDuplicateBadge={false}
-                  />
-                  {res.isNew && (
-                    <span className="mt-1 rounded bg-emerald-500/20 px-2 py-0.5 text-[9px] font-black text-emerald-300 border border-emerald-500/40">
-                      NEW
-                    </span>
-                  )}
-                </div>
-              ))}
+              {session.cards.map((res, idx) => {
+                const hasMarketPrice = res.printing.estimatedValue > 0 && !['common', 'uncommon'].includes(res.printing.rarity);
+                return (
+                  <div key={idx} className="relative flex flex-col items-center">
+                    <PokemonCardView
+                      card={res.printing}
+                      isOwned={true}
+                      interactive={false}
+                      size="md"
+                      showDuplicateBadge={false}
+                    />
+                    <div className="mt-1 flex items-center space-x-1.5">
+                      {res.isNew && (
+                        <span className="rounded bg-emerald-500/20 px-2 py-0.5 text-[9px] font-black text-emerald-300 border border-emerald-500/40">
+                          NEW
+                        </span>
+                      )}
+                      {hasMarketPrice && (
+                        <span className="rounded bg-black/90 px-2 py-0.5 text-[10px] font-black text-emerald-400 border border-emerald-500/40 shadow-xs">
+                          ${res.printing.estimatedValue.toFixed(2)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
 
             {/* Action Bar */}

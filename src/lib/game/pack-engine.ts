@@ -304,7 +304,12 @@ export function createOpeningSession(
 
   // Find top pull based on rarity priority and estimated market value
   const topPull = [...cards].sort((a, b) => b.printing.estimatedValue - a.printing.estimatedValue)[0].printing;
-  const totalMarketValue = Number(cards.reduce((sum, c) => sum + c.printing.estimatedValue, 0).toFixed(2));
+  const totalMarketValue = Number(
+    cards
+      .filter((c) => !['common', 'uncommon'].includes(c.printing.rarity) && c.printing.estimatedValue > 0)
+      .reduce((sum, c) => sum + c.printing.estimatedValue, 0)
+      .toFixed(2)
+  );
 
   return {
     id: `session-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
