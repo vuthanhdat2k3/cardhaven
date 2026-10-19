@@ -5,6 +5,7 @@ import { Product } from '@/types';
 import { POKEMON_SETS } from '@/data/sets';
 import { BoosterPackFoil } from '@/components/ui/BoosterPackFoil';
 import { SealedBoxProduct } from '@/components/ui/SealedBoxProduct';
+import { useGame } from '@/lib/store/game-context';
 import { ShoppingCart, Info, Star } from 'lucide-react';
 
 interface ProductCardProps {
@@ -14,10 +15,12 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onInspect, onQuickBuy }) => {
+  const { storeWaves, restockCollectionWave } = useGame();
   const setInfo = POKEMON_SETS.find((s) => s.id === product.setId);
+  const wave = storeWaves[product.setId];
 
   const isLowStock = product.stock > 0 && product.stock <= 10;
-  const isOutOfStock = product.stock <= 0;
+  const isOutOfStock = product.stock <= 0 || wave?.status === 'sold_out';
 
   return (
     <div className="group relative flex flex-col justify-between rounded-2xl border border-zinc-800/90 bg-gradient-to-b from-zinc-900/90 via-zinc-900/70 to-zinc-950 p-4 shadow-xl transition-all duration-300 hover:-translate-y-1.5 hover:border-amber-500/50 hover:shadow-2xl hover:shadow-amber-500/10">
@@ -27,6 +30,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onInspect, on
           {product.badge && (
             <span className="rounded-md bg-amber-500/20 px-2 py-0.5 text-[10px] font-extrabold uppercase tracking-wide text-amber-300 border border-amber-500/40">
               {product.badge}
+            </span>
+          )}
+          {wave && (
+            <span className="rounded-md bg-zinc-800 px-1.5 py-0.5 text-[10px] font-bold text-amber-300 border border-zinc-700">
+              Đợt #{wave.waveNumber}
             </span>
           )}
           <span
@@ -74,16 +82,25 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onInspect, on
         </p>
       </div>
 
-      {/* Stock Status Bar */}
+      {/* Stock & Wave Status Bar */}
       <div className="mt-2 pt-2 border-t border-zinc-800/80">
         <div className="flex items-center justify-between text-[11px] mb-1">
-          <span className="text-zinc-400">Kho hàng:</span>
+          <span className="text-zinc-400">Đợt #{wave?.waveNumber || 1}:</span>
           {isOutOfStock ? (
-            <span className="font-bold text-red-500">Hết hàng</span>
+            <button
+              onClick={() => restockCollectionWave(product.setId)}
+              className="text-[10px] font-bold text-emerald-400 hover:underline"
+            >
+              Hết hàng • Nhập đợt mới
+            </button>
           ) : isLowStock ? (
-            <span className="font-bold text-amber-400 animate-pulse">Chỉ còn {product.stock}!</span>
+            <span className="font-bold text-amber-400 animate-pulse">Sắp hết ({product.stock})</span>
           ) : (
-            <span className="font-medium text-emerald-400">{product.stock} có sẵn</span>
+            <span className="font-medium text-emerald-400">
+              {product.productType === 'booster_pack'
+                ? `${wave?.remainingLoosePacks ?? product.stock} pack lẻ`
+                : `${wave?.remainingBoxes ?? product.stock} box`}
+            </span>
           )}
         </div>
       </div>

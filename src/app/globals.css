@@ -126,16 +126,76 @@ body {
 }
 
 /* Foil Tear Animations */
-@keyframes tearLeft {
-  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(-40px) rotate(-15deg); opacity: 0; }
+@keyframes tearFlyOff {
+  0% {
+    transform: translateY(0) rotate(0deg) scale(1);
+    opacity: 1;
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
+  }
+  40% {
+    transform: translateY(-25px) translateX(35px) rotate(12deg) scale(1.05);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-80px) translateX(90px) rotate(28deg) scale(0.9);
+    opacity: 0;
+  }
 }
 
-@keyframes tearRight {
-  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(40px) rotate(15deg); opacity: 0; }
+@keyframes cardsSlideUp {
+  0% {
+    transform: translateY(60px) scale(0.92);
+    opacity: 0.4;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
 }
 
-.pack-tear-top {
-  animation: tearLeft 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+@keyframes screenShake {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  20% { transform: translate(-3px, 2px) rotate(-0.5deg); }
+  40% { transform: translate(3px, -2px) rotate(0.5deg); }
+  60% { transform: translate(-2px, -1px) rotate(-0.3deg); }
+  80% { transform: translate(2px, 1px) rotate(0.3deg); }
+}
+
+@keyframes cosmicRotate {
+  0% { transform: rotate(0deg) scale(1); }
+  50% { transform: rotate(180deg) scale(1.1); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes goldShockwave {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.9;
+    box-shadow: 0 0 0 0 rgba(234, 179, 8, 0.8);
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+    box-shadow: 0 0 60px 40px rgba(234, 179, 8, 0);
+  }
+}
+
+.pack-tear-flying {
+  animation: tearFlyOff 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.cards-emerge {
+  animation: cardsSlideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.screen-shake {
+  animation: screenShake 0.5s ease-in-out;
+}
+
+.cosmic-nebula {
+  animation: cosmicRotate 12s linear infinite;
+}
+
+.gold-shockwave {
+  animation: goldShockwave 0.8s ease-out forwards;
 }

@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState, useCallback, use
 import {
   OpeningSession,
   Product,
+  SetPrintWave,
   User,
   UserCollectionEntry,
   UserInventoryItem,
@@ -18,6 +19,63 @@ import { createOpeningSession } from '@/lib/game/pack-engine';
 import { soundEffects } from '@/lib/audio/sound-effects';
 
 const STORAGE_KEY = 'pokemon_tcg_store_save_v2';
+
+export const INITIAL_STORE_WAVES: Record<string, SetPrintWave> = {
+  'sv-151-en': {
+    setId: 'sv-151-en',
+    waveNumber: 1,
+    maxBoxes: 6,
+    remainingBoxes: 4,
+    maxLoosePacks: 36,
+    remainingLoosePacks: 22,
+    status: 'available',
+  },
+  'sv-pre-en': {
+    setId: 'sv-pre-en',
+    waveNumber: 1,
+    maxBoxes: 6,
+    remainingBoxes: 3,
+    maxLoosePacks: 36,
+    remainingLoosePacks: 16,
+    status: 'available',
+  },
+  'sv-151-jp': {
+    setId: 'sv-151-jp',
+    waveNumber: 1,
+    maxBoxes: 6,
+    remainingBoxes: 2,
+    maxLoosePacks: 36,
+    remainingLoosePacks: 8,
+    status: 'low_stock',
+  },
+  'swsh-crz-en': {
+    setId: 'swsh-crz-en',
+    waveNumber: 1,
+    maxBoxes: 6,
+    remainingBoxes: 1,
+    maxLoosePacks: 36,
+    remainingLoosePacks: 5,
+    status: 'low_stock',
+  },
+  'meg-30th-en': {
+    setId: 'meg-30th-en',
+    waveNumber: 1,
+    maxBoxes: 6,
+    remainingBoxes: 5,
+    maxLoosePacks: 36,
+    remainingLoosePacks: 26,
+    status: 'available',
+  },
+  'pocket-a1-en': {
+    setId: 'pocket-a1-en',
+    waveNumber: 1,
+    maxBoxes: 6,
+    remainingBoxes: 6,
+    maxLoosePacks: 36,
+    remainingLoosePacks: 32,
+    status: 'available',
+  },
+};
 
 const DEFAULT_USER: User = {
   id: 'usr_master_collector',
@@ -76,6 +134,7 @@ interface GameContextType {
   openingHistory: OpeningSession[];
   activeOpeningSession: OpeningSession | null;
   products: Product[];
+  storeWaves: Record<string, SetPrintWave>;
   toastMessage: { text: string; type: 'success' | 'error' | 'info' } | null;
   // Actions
   loginAsGuest: () => void;
@@ -84,6 +143,7 @@ interface GameContextType {
   updateSettings: (partial: Partial<UserSettings>) => void;
   grantFunds: (amount: number, reason?: string) => void;
   purchaseProduct: (productId: string, quantity: number) => { success: boolean; message: string };
+  restockCollectionWave: (setId: string) => void;
   unpackBoxToPacks: (productId: string) => { success: boolean; message: string };
   startPackOpening: (productId: string) => OpeningSession | null;
   finishCurrentOpening: () => void;
@@ -105,6 +165,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [openingHistory, setOpeningHistory] = useState<OpeningSession[]>([]);
   const [activeOpeningSession, setActiveOpeningSession] = useState<OpeningSession | null>(null);
   const [products, setProducts] = useState<Product[]>(PRODUCTS);
+  const [storeWaves, setStoreWaves] = useState<Record<string, SetPrintWave>>(INITIAL_STORE_WAVES);
   const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'error' | 'info' } | null>(null);
 
   // Load from localStorage on mount (hydration safe)
@@ -120,6 +181,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         if (parsed.inventory) setInventory(parsed.inventory);
         if (parsed.collection) setCollection(parsed.collection);
         if (parsed.openingHistory) setOpeningHistory(parsed.openingHistory);
+        if (parsed.storeWaves) setStoreWaves(parsed.storeWaves);
       }
     } catch {
       // ignore error
@@ -148,12 +210,13 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
           inventory,
           collection,
           openingHistory,
+          storeWaves,
         })
       );
     } catch (e) {
       console.warn('Failed to save state to localStorage:', e);
     }
-  }, [hasHydrated, user, settings, wallet, inventory, collection, openingHistory]);
+  }, [hasHydrated, user, settings, wallet, inventory, collection, openingHistory, storeWaves]);
 
   // Sync sound engine config with settings
   useEffect(() => {
@@ -227,6 +290,21 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         return { success: false, message: `Chỉ còn ${product.stock} sản phẩm trong kho.` };
       }
 
+      // Check wave stock
+      const wave = storeWaves[product.setId];
+      const isBoxType = product.productType !== 'booster_pack';
+
+      if (wave) {
+        if (isBoxType && wave.remainingBoxes < quantity) {
+          showToast(`Đợt #${wave.waveNumber} chỉ còn ${wave.remainingBoxes} box! Hãy nhập đợt hàng mới.`, 'error');
+          return { success: false, message: `Đợt này chỉ còn ${wave.remainingBoxes} box.` };
+        }
+        if (!isBoxType && wave.remainingLoosePacks < quantity && wave.remainingBoxes === 0) {
+          showToast(`Đợt #${wave.waveNumber} đã hết sạch pack lẻ! Hãy nhập đợt hàng mới.`, 'error');
+          return { success: false, message: `Đợt này chỉ còn ${wave.remainingLoosePacks} pack lẻ.` };
+        }
+      }
+
       const totalCost = Number((product.price * quantity).toFixed(2));
       if (wallet.balance < totalCost) {
         showToast(`Số dư không đủ! Cần $${totalCost.toFixed(2)}, bạn chỉ có $${wallet.balance.toFixed(2)}.`, 'error');
@@ -258,6 +336,46 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         prev.map((p) => (p.id === productId ? { ...p, stock: p.stock - quantity } : p))
       );
 
+      // Update wave inventory
+      if (wave) {
+        setStoreWaves((prevWaves) => {
+          const current = prevWaves[product.setId];
+          if (!current) return prevWaves;
+
+          let remBoxes = current.remainingBoxes;
+          let remPacks = current.remainingLoosePacks;
+
+          if (isBoxType) {
+            remBoxes = Math.max(0, remBoxes - quantity);
+          } else {
+            remPacks = remPacks - quantity;
+            if (remPacks < 0 && remBoxes > 0) {
+              const boxesToOpen = Math.ceil(Math.abs(remPacks) / 36);
+              remBoxes = Math.max(0, remBoxes - boxesToOpen);
+              remPacks += boxesToOpen * 36;
+            }
+            remPacks = Math.max(0, remPacks);
+          }
+
+          let nextStatus: 'available' | 'low_stock' | 'sold_out' = 'available';
+          if (remBoxes === 0 && remPacks === 0) {
+            nextStatus = 'sold_out';
+          } else if (remBoxes <= 1 || remPacks <= 6) {
+            nextStatus = 'low_stock';
+          }
+
+          return {
+            ...prevWaves,
+            [product.setId]: {
+              ...current,
+              remainingBoxes: remBoxes,
+              remainingLoosePacks: remPacks,
+              status: nextStatus,
+            },
+          };
+        });
+      }
+
       // Add to inventory
       setInventory((prev) => {
         const existingIdx = prev.findIndex((item) => item.productId === productId);
@@ -285,7 +403,39 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       showToast(`Mua thành công ${quantity}x ${product.name}! Đã thêm vào Kho đồ.`, 'success');
       return { success: true, message: 'Giao dịch thành công!' };
     },
-    [products, wallet.balance, showToast]
+    [products, wallet.balance, storeWaves, showToast]
+  );
+
+  const restockCollectionWave = useCallback(
+    (setId: string) => {
+      setStoreWaves((prev) => {
+        const current = prev[setId];
+        const nextWaveNumber = (current?.waveNumber || 1) + 1;
+        const newWave: SetPrintWave = {
+          setId,
+          waveNumber: nextWaveNumber,
+          maxBoxes: 6,
+          remainingBoxes: 6,
+          maxLoosePacks: 36,
+          remainingLoosePacks: 36,
+          status: 'available',
+        };
+        return {
+          ...prev,
+          [setId]: newWave,
+        };
+      });
+
+      setProducts((prev) =>
+        prev.map((p) =>
+          p.setId === setId ? { ...p, stock: p.productType === 'booster_pack' ? 36 : 6 } : p
+        )
+      );
+
+      soundEffects.playCoinClink();
+      showToast(`Đã nhập thành công Đợt hàng mới cho bộ sưu tập! (Print Wave Restocked)`, 'success');
+    },
+    [showToast]
   );
 
   // Unpack sealed box / ETB into individual booster packs
@@ -454,6 +604,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       openingHistory,
       activeOpeningSession,
       products,
+      storeWaves,
       toastMessage,
       loginAsGuest,
       loginUser,
@@ -461,6 +612,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       updateSettings,
       grantFunds,
       purchaseProduct,
+      restockCollectionWave,
       unpackBoxToPacks,
       startPackOpening,
       finishCurrentOpening,
@@ -478,6 +630,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       openingHistory,
       activeOpeningSession,
       products,
+      storeWaves,
       toastMessage,
       loginAsGuest,
       loginUser,
@@ -485,6 +638,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       updateSettings,
       grantFunds,
       purchaseProduct,
+      restockCollectionWave,
       unpackBoxToPacks,
       startPackOpening,
       finishCurrentOpening,

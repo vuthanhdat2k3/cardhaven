@@ -19,11 +19,13 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
   onClose,
   onOpenImmediately,
 }) => {
-  const { wallet, purchaseProduct } = useGame();
+  const { wallet, purchaseProduct, storeWaves, restockCollectionWave } = useGame();
   const [quantity, setQuantity] = useState(1);
   const [buying, setBuying] = useState(false);
 
   if (!product) return null;
+
+  const wave = storeWaves[product.setId];
 
   const setInfo = POKEMON_SETS.find((s) => s.id === product.setId);
   const totalCost = Number((product.price * quantity).toFixed(2));
@@ -157,6 +159,38 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
               </div>
             )}
 
+            {/* Print Wave Status */}
+            {wave && (
+              <div className="flex items-center justify-between rounded-xl border border-zinc-800 bg-zinc-900/40 px-3 py-2 text-xs">
+                <div>
+                  <span className="font-bold text-amber-300">Đợt hàng #{wave.waveNumber}</span>
+                  <span className="text-zinc-400 block text-[11px]">
+                    {product.productType === 'booster_pack'
+                      ? `Còn ${wave.remainingLoosePacks} pack lẻ trên kệ`
+                      : `Còn ${wave.remainingBoxes} box sealed`}
+                  </span>
+                </div>
+                {wave.status === 'sold_out' ? (
+                  <button
+                    onClick={() => restockCollectionWave(product.setId)}
+                    className="rounded-lg bg-emerald-500/20 border border-emerald-500/40 px-2.5 py-1 text-[11px] font-bold text-emerald-300 hover:bg-emerald-500/30 transition"
+                  >
+                    Nhập Đợt #{wave.waveNumber + 1}
+                  </button>
+                ) : (
+                  <span
+                    className={`rounded px-2 py-0.5 text-[10px] font-bold ${
+                      wave.status === 'low_stock'
+                        ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
+                        : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                    }`}
+                  >
+                    {wave.status === 'low_stock' ? 'Sắp Hết' : 'Sẵn Hàng'}
+                  </span>
+                )}
+              </div>
+            )}
+
             {/* Action Buttons */}
             <div className="space-y-2 pt-2">
               <button
@@ -167,7 +201,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 <ShoppingBag className="h-4 w-4" />
                 <span>
                   {isOutOfStock
-                    ? 'Hết hàng'
+                    ? 'Hết hàng đợt này'
                     : !hasEnoughFunds
                     ? 'Không đủ PokéCoins'
                     : `Mua ngay (${quantity} cái) — $${totalCost.toFixed(2)}`}

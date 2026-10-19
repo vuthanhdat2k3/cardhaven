@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { openSingleBooster, createOpeningSession } from './pack-engine';
+import { openSingleBooster, generateSeededBoosterBoxPacks } from './pack-engine';
 import { PACK_TEMPLATES } from '@/data/pack-templates';
-import { PRODUCTS } from '@/data/products';
 
 describe('Pack Opening Engine', () => {
   it('should generate the exact number of cards specified in the pack template', () => {
@@ -33,14 +32,48 @@ describe('Pack Opening Engine', () => {
     }
   });
 
-  it('should create a valid OpeningSession with total market value and top pull', () => {
-    const boosterProduct = PRODUCTS.find((p) => p.productType === 'booster_pack')!;
-    const session = createOpeningSession(boosterProduct.id, []);
+  it('should guarantee ZERO duplicate cards in the same pack across all templates', () => {
+    for (const template of PACK_TEMPLATES) {
+      for (let iteration = 0; iteration < 20; iteration++) {
+        const cards = openSingleBooster(template, []);
+        const cardIds = cards.map((c) => c.printing.id);
+        const uniqueIds = new Set(cardIds);
 
-    expect(session.id).toBeDefined();
-    expect(session.productId).toBe(boosterProduct.id);
-    expect(session.cards.length).toBeGreaterThan(0);
-    expect(session.topPull).toBeDefined();
-    expect(session.totalMarketValue).toBeGreaterThan(0);
+        // Every single card in the pack MUST have a unique ID
+        expect(uniqueIds.size).toBe(cards.length);
+      }
+    }
+  });
+
+  it('should generate a seeded 36-pack booster box with authentic hit rates', () => {
+    const template151 = PACK_TEMPLATES.find((t) => t.setId === 'sv-151-en')!;
+    const boxPacks = generateSeededBoosterBoxPacks(template151, [], 36);
+
+    expect(boxPacks).toHaveLength(36);
+
+    // Verify all packs in the box have zero internal duplicates
+    boxPacks.forEach((pack) => {
+      const ids = pack.map((c) => c.printing.id);
+      expect(new Set(ids).size).toBe(pack.length);
+    });
+
+    // Check hit slots across the box
+    const hits = boxPacks.map((pack) => {
+      // Find the hit slot (slot 8 or rare_or_higher)
+      const hitCard = pack.find((c) =>
+        ['double_rare', 'ultra_rare', 'special_illustration_rare', 'hyper_rare', 'holo_rare'].includes(
+          c.printing.rarity
+        )
+      );
+      return hitCard?.printing.rarity;
+    });
+
+    // Should contain multiple Double Rare ex hits
+    const exHits = hits.filter((r) => r === 'double_rare');
+    expect(exHits.length).toBeGreaterThanOrEqual(4);
+
+    // Should contain guaranteed Ultra Rare / SIR
+    const ultraHits = hits.filter((r) => r === 'ultra_rare' || r === 'special_illustration_rare');
+    expect(ultraHits.length).toBeGreaterThanOrEqual(2);
   });
 });

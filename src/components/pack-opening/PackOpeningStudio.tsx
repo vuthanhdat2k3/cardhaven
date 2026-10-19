@@ -31,7 +31,8 @@ export const PackOpeningStudio: React.FC<PackOpeningStudioProps> = ({
   // Phase 1: 'sealed' -> Phase 2: 'revealing' -> Phase 3: 'summary'
   const [phase, setPhase] = useState<'sealed' | 'revealing' | 'summary'>('sealed');
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
-  const [isTearing, setIsTearing] = useState(false);
+  const [tearStage, setTearStage] = useState<'intact' | 'ripping' | 'emerging'>('intact');
+  const [screenShakeActive, setScreenShakeActive] = useState(false);
   const [cardRevealed, setCardRevealed] = useState(false);
 
   const totalCards = session.cards.length;
@@ -42,17 +43,53 @@ export const PackOpeningStudio: React.FC<PackOpeningStudioProps> = ({
   const product = PRODUCTS_MAP.get(session.productId);
   const isJP = product?.language === 'JP' || session.productName.includes('(JP)');
 
-  // Trigger confetti for high-rarity hits
+  // Trigger confetti & sound effects tailored specifically to each rarity tier
   const triggerHitCelebration = (rarity: string) => {
-    if (['special_illustration_rare', 'hyper_rare', 'ultra_rare'].includes(rarity)) {
+    if (['special_illustration_rare', 'hyper_rare'].includes(rarity)) {
+      setScreenShakeActive(true);
+      setTimeout(() => setScreenShakeActive(false), 600);
+      soundEffects.playUltraRareFanfare();
+
+      // Multi-stage fireworks for God Pull
+      confetti({
+        particleCount: 120,
+        spread: 100,
+        origin: { y: 0.5 },
+        colors: ['#ffd700', '#ff007f', '#00e5ff', '#ff8800', '#a855f7'],
+      });
+      setTimeout(() => {
+        confetti({
+          particleCount: 60,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: ['#ffd700', '#ffffff'],
+        });
+        confetti({
+          particleCount: 60,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: ['#ffd700', '#ffffff'],
+        });
+      }, 250);
+    } else if (rarity === 'ultra_rare') {
       soundEffects.playUltraRareFanfare();
       confetti({
         particleCount: 80,
-        spread: 90,
+        spread: 80,
         origin: { y: 0.6 },
-        colors: ['#ffd700', '#ff007f', '#00e5ff', '#ff8800'],
+        colors: ['#a855f7', '#ec4899', '#3b82f6', '#ffd700'],
       });
-    } else if (['holo_rare', 'double_rare'].includes(rarity)) {
+    } else if (rarity === 'double_rare') {
+      soundEffects.playHoloShimmer();
+      confetti({
+        particleCount: 40,
+        spread: 60,
+        origin: { y: 0.6 },
+        colors: ['#f59e0b', '#fbbf24', '#ffffff'],
+      });
+    } else if (['holo_rare', 'rare'].includes(rarity)) {
       soundEffects.playHoloShimmer();
     } else {
       soundEffects.playCardFlip();
@@ -60,17 +97,31 @@ export const PackOpeningStudio: React.FC<PackOpeningStudioProps> = ({
   };
 
   const handleTearPack = () => {
-    if (isTearing) return;
-    setIsTearing(true);
+    if (tearStage !== 'intact') return;
+    setTearStage('ripping');
     soundEffects.playPackTear();
 
-    const delay = settings.animationSpeed === 'instant' ? 100 : settings.animationSpeed === 'fast' ? 300 : 700;
+    // Metallic silver & gold confetti dust flying out of the ripped crimp
+    confetti({
+      particleCount: 45,
+      spread: 70,
+      origin: { y: 0.35 },
+      colors: ['#c0c0c0', '#e2e8f0', '#ffd700', '#ffffff'],
+    });
+
+    const isInstant = settings.animationSpeed === 'instant';
+    const isFast = settings.animationSpeed === 'fast';
+
+    setTimeout(() => {
+      setTearStage('emerging');
+    }, isInstant ? 50 : isFast ? 200 : 400);
+
     setTimeout(() => {
       setPhase('revealing');
       setCurrentCardIndex(0);
       setCardRevealed(false);
-      setIsTearing(false);
-    }, delay);
+      setTearStage('intact');
+    }, isInstant ? 150 : isFast ? 450 : 850);
   };
 
   const handleRevealCard = () => {
@@ -96,11 +147,26 @@ export const PackOpeningStudio: React.FC<PackOpeningStudioProps> = ({
     soundEffects.playHoloShimmer();
   };
 
+  const currentRarity = currentCardResult?.printing.rarity;
+  const isGodPull = ['special_illustration_rare', 'hyper_rare'].includes(currentRarity);
+  const isUltraRare = currentRarity === 'ultra_rare';
+  const isDoubleRare = currentRarity === 'double_rare';
+  const isHolo = currentRarity === 'holo_rare';
+
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-between bg-[#08090c] text-white overflow-hidden p-4 select-none">
-      
-      {/* Background Arena Lighting */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.08)_0%,transparent_70%)] pointer-events-none" />
+    <div
+      className={`fixed inset-0 z-50 flex flex-col items-center justify-between bg-[#08090c] text-white overflow-hidden p-4 select-none ${
+        screenShakeActive ? 'screen-shake' : ''
+      }`}
+    >
+      {/* Background Arena Lighting (Dims darker on God Pull for dramatic spotlight) */}
+      <div
+        className={`absolute inset-0 pointer-events-none transition-all duration-700 ${
+          cardRevealed && isGodPull
+            ? 'bg-black/90'
+            : 'bg-[radial-gradient(circle_at_center,rgba(245,158,11,0.08)_0%,transparent_70%)]'
+        }`}
+      />
 
       {/* Top Header Bar */}
       <div className="relative z-20 flex w-full max-w-4xl items-center justify-between py-2 border-b border-zinc-800">
@@ -135,22 +201,58 @@ export const PackOpeningStudio: React.FC<PackOpeningStudioProps> = ({
 
       {/* Main Center Stage */}
       <div className="relative z-10 flex flex-1 w-full items-center justify-center my-4">
-        
         {/* ========================================================= */}
         {/* PHASE 1: SEALED PACK READY TO TEAR */}
         {/* ========================================================= */}
         {phase === 'sealed' && (
           <div className="flex flex-col items-center animate-in zoom-in-95 duration-300">
-            
-            {/* The Authentic Pack Foil */}
+            {/* The Authentic Pack Foil with Realistic Tear Mechanism */}
             <div
               onClick={handleTearPack}
-              className={`relative cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 flex flex-col items-center ${
-                isTearing ? 'pack-tear-top' : ''
-              }`}
+              className="relative cursor-pointer transition-all duration-300 hover:scale-102 flex flex-col items-center"
             >
+              {/* Flying torn top piece during tear animation */}
+              {(tearStage === 'ripping' || tearStage === 'emerging') && (
+                <div className="pack-tear-flying absolute -top-4 left-0 right-0 z-30 pointer-events-none">
+                  <div className="h-10 w-full bg-gradient-to-r from-zinc-500 via-zinc-200 to-zinc-600 rounded-t-lg shadow-xl border-b-2 border-white/70 flex items-center justify-center">
+                    <div className="flex space-x-0.5 opacity-60">
+                      {Array.from({ length: 24 }).map((_, i) => (
+                        <div key={i} className="w-0.5 h-6 bg-black/40" />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Emergent card deck sliding up out of the pack wrapper */}
+              {tearStage === 'emerging' && (
+                <div className="absolute -top-20 inset-x-4 z-10 cards-emerge flex justify-center pointer-events-none">
+                  <div className="h-36 w-52 rounded-xl bg-gradient-to-b from-blue-900 to-indigo-950 border-2 border-amber-400/50 shadow-2xl flex flex-col items-center pt-2">
+                    <div className="h-1.5 w-16 rounded-full bg-amber-400/70" />
+                    <span className="text-[10px] font-mono font-bold text-amber-200 mt-2">
+                      POKÉMON CARDS DECK
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Top tear guideline overlay when intact */}
+              {tearStage === 'intact' && (
+                <div className="absolute top-2 inset-x-2 z-20 flex items-center justify-center pointer-events-none">
+                  <div className="rounded-full bg-black/70 backdrop-blur-xs border border-amber-400/60 px-3 py-0.5 text-[9px] font-black uppercase tracking-wider text-amber-300 shadow-lg flex items-center space-x-1.5">
+                    <span>✂</span>
+                    <span>NHẤN ĐỂ XÉ SEAL</span>
+                  </div>
+                </div>
+              )}
+
               {product ? (
-                <BoosterPackFoil product={product} size="xl" interactive={false} className="shadow-2xl shadow-amber-500/25" />
+                <BoosterPackFoil
+                  product={product}
+                  size="xl"
+                  interactive={false}
+                  className="shadow-2xl shadow-amber-500/25"
+                />
               ) : (
                 <div className="h-[440px] w-64 rounded-xl border-2 border-amber-500 bg-zinc-900 flex items-center justify-center">
                   <span className="text-xl font-bold">POKÉMON TCG</span>
@@ -161,23 +263,33 @@ export const PackOpeningStudio: React.FC<PackOpeningStudioProps> = ({
             {/* Instruction button */}
             <button
               onClick={handleTearPack}
-              disabled={isTearing}
-              className="mt-6 flex items-center space-x-2 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 px-8 py-3.5 text-sm font-black text-black shadow-xl shadow-amber-500/30 hover:brightness-110 active:scale-95 transition"
+              disabled={tearStage !== 'intact'}
+              className="mt-6 flex items-center space-x-2 rounded-2xl bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 px-10 py-3.5 text-sm font-black text-black shadow-2xl shadow-amber-500/30 hover:brightness-110 active:scale-95 transition"
             >
               <Sparkles className="h-4 w-4" />
-              <span>{isTearing ? 'Đang Xé Vỏ Gói...' : 'Bóc Gói Thẻ Này'}</span>
+              <span>
+                {tearStage === 'ripping'
+                  ? 'Đang Xé Vỏ Gói...'
+                  : tearStage === 'emerging'
+                  ? 'Lấy Bộ Thẻ Ra...'
+                  : '✂ Xé Niêm Phong Gói Này'}
+              </span>
             </button>
           </div>
         )}
 
         {/* ========================================================= */}
-        {/* PHASE 2: SEQUENTIAL CARD REVEAL */}
+        {/* PHASE 2: SEQUENTIAL CARD REVEAL WITH RARITY HIT VFX */}
         {/* ========================================================= */}
         {phase === 'revealing' && currentCardResult && (
-          <div className="flex flex-col items-center max-w-sm w-full">
-            
+          <div className="relative flex flex-col items-center max-w-sm w-full">
+            {/* Cosmic Nebula Aura for God Pull / SIR / Hyper Rare */}
+            {cardRevealed && isGodPull && (
+              <div className="absolute -inset-24 rounded-full bg-[radial-gradient(circle,_rgba(234,179,8,0.45)_0%,_rgba(168,85,247,0.3)_40%,_transparent_70%)] blur-2xl cosmic-nebula pointer-events-none z-0" />
+            )}
+
             {/* Card Progress Indicator */}
-            <div className="flex items-center space-x-2 mb-4">
+            <div className="relative z-10 flex items-center space-x-2 mb-3">
               <span className="text-xs font-mono text-zinc-400">
                 Thẻ bài <strong className="text-amber-400">{currentCardIndex + 1}</strong> / {totalCards}
               </span>
@@ -197,14 +309,45 @@ export const PackOpeningStudio: React.FC<PackOpeningStudioProps> = ({
               </div>
             </div>
 
+            {/* Rarity-Tiered Celebration Banner */}
+            {cardRevealed && (
+              <div className="relative z-20 mb-3 animate-in zoom-in duration-300">
+                {isGodPull ? (
+                  <div className="bg-gradient-to-r from-amber-500 via-fuchsia-500 to-amber-400 p-0.5 rounded-full shadow-[0_0_25px_rgba(234,179,8,0.8)]">
+                    <div className="bg-black/90 backdrop-blur-md px-6 py-1.5 rounded-full flex items-center space-x-2">
+                      <span className="text-amber-300 text-sm animate-pulse">★</span>
+                      <span className="text-xs sm:text-sm font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-amber-200 to-fuchsia-300 uppercase">
+                        {currentRarity === 'hyper_rare'
+                          ? 'GOD HIT: HYPER RARE GOLD SECRET'
+                          : 'CHASE HIT: SPECIAL ILLUSTRATION RARE'}
+                      </span>
+                      <span className="text-amber-300 text-sm animate-pulse">★</span>
+                    </div>
+                  </div>
+                ) : isUltraRare ? (
+                  <div className="rounded-full bg-gradient-to-r from-purple-600 to-amber-500 px-5 py-1 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-purple-500/50">
+                    ★★★ ULTRA RARE (FULL ART) ★★★
+                  </div>
+                ) : isDoubleRare ? (
+                  <div className="rounded-full bg-gradient-to-r from-rose-600 to-amber-500 px-4 py-1 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-rose-500/50">
+                    ★★ DOUBLE RARE (ex / MEGA) ★★
+                  </div>
+                ) : isHolo ? (
+                  <div className="rounded-full bg-zinc-800/90 border border-purple-400/40 px-3 py-0.5 text-[11px] font-bold tracking-wider text-purple-300 shadow-md">
+                    ★ HOLO RARE HIT
+                  </div>
+                ) : null}
+              </div>
+            )}
+
             {/* The Active Card (Front or Face Down) */}
-            <div className="relative cursor-pointer" onClick={handleRevealCard}>
+            <div className="relative cursor-pointer z-10" onClick={handleRevealCard}>
               {!cardRevealed ? (
                 // Authentic 1:1 Face Down Card Back
                 <div className="relative h-[430px] w-[308px] rounded-2xl border-4 border-[#0b132b] bg-[#1c2d5a] p-4 flex flex-col items-center justify-between shadow-2xl shadow-blue-950/60 transform transition hover:scale-102 active:scale-98 overflow-hidden select-none">
                   {/* Outer subtle frame */}
                   <div className="absolute inset-1.5 rounded-xl border border-amber-400/30 pointer-events-none" />
-                  
+
                   {/* Cosmic Blue Galaxy background */}
                   <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-700/50 via-indigo-950/90 to-[#070b19] pointer-events-none" />
 
@@ -229,7 +372,7 @@ export const PackOpeningStudio: React.FC<PackOpeningStudioProps> = ({
                   {/* Center: Iconic Pokéball with Energy Aura */}
                   <div className="relative z-10 my-auto flex items-center justify-center">
                     <div className="absolute h-36 w-36 rounded-full bg-cyan-400/20 blur-xl pointer-events-none" />
-                    
+
                     {/* Outer Pokéball sphere */}
                     <div className="relative flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-b from-red-600 0%, #dc2626 50%, #f8fafc 50%, #f8fafc 100%) shadow-2xl ring-4 ring-[#0b132b] overflow-hidden">
                       {/* Center band */}
@@ -249,8 +392,16 @@ export const PackOpeningStudio: React.FC<PackOpeningStudioProps> = ({
                   </div>
                 </div>
               ) : (
-                // Revealed Front
-                <div className="animate-in flip-in-y duration-300">
+                // Revealed Front with Rarity-Tiered Aura
+                <div
+                  className={`animate-in flip-in-y duration-300 relative ${
+                    isGodPull
+                      ? 'ring-4 ring-amber-400/90 ring-offset-4 ring-offset-black rounded-2xl shadow-[0_0_50px_rgba(251,191,36,0.8)]'
+                      : isDoubleRare
+                      ? 'shadow-[0_0_30px_rgba(244,63,94,0.5)]'
+                      : ''
+                  }`}
+                >
                   <PokemonCardView
                     card={currentCardResult.printing}
                     isOwned={true}
@@ -272,7 +423,7 @@ export const PackOpeningStudio: React.FC<PackOpeningStudioProps> = ({
             {/* Bottom Reveal / Next Button */}
             <button
               onClick={handleRevealCard}
-              className="mt-6 flex items-center space-x-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-8 py-3 text-sm font-black text-black shadow-lg shadow-amber-500/20 hover:from-amber-400 hover:to-amber-500 active:scale-95 transition"
+              className="mt-6 flex items-center space-x-2 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 px-8 py-3 text-sm font-black text-black shadow-lg shadow-amber-500/20 hover:from-amber-400 hover:to-amber-500 active:scale-95 transition z-10"
             >
               <span>
                 {!cardRevealed

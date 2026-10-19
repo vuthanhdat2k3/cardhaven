@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Product } from '@/types';
+import { useGame } from '@/lib/store/game-context';
 import { Eye, Flame, Shield, Award } from 'lucide-react';
 import { BoosterPackFoil } from '@/components/ui/BoosterPackFoil';
 import { SealedBoxProduct } from '@/components/ui/SealedBoxProduct';
@@ -17,6 +18,7 @@ export const HobbyShopScene: React.FC<HobbyShopSceneProps> = ({
   onInspectProduct,
   onQuickBuy,
 }) => {
+  const { storeWaves } = useGame();
   const featuredGrails = products.filter((p) => p.featured).slice(0, 3);
   const boosterBoxes = products.filter((p) => p.productType === 'booster_box' || p.productType === 'elite_trainer_box');
   const boosterPacks = products.filter((p) => p.productType === 'booster_pack' || p.productType === 'bundle');
@@ -143,8 +145,14 @@ export const HobbyShopScene: React.FC<HobbyShopSceneProps> = ({
                   className="group relative flex flex-col justify-between rounded-xl border border-zinc-800 bg-zinc-950/90 p-3 shadow-lg cursor-pointer transition-all duration-300 hover:border-amber-500/60 hover:-translate-y-1.5"
                 >
                   <div className="flex items-center justify-between text-[10px]">
-                    <span className="font-bold text-amber-400">{product.language}</span>
-                    <span className="text-zinc-400 font-mono">Stock: {product.stock}</span>
+                    <span className="rounded bg-zinc-800 px-1.5 py-0.2 font-bold text-amber-300">
+                      Đợt #{storeWaves[product.setId]?.waveNumber || 1}
+                    </span>
+                    <span className="text-zinc-400 font-mono">
+                      {storeWaves[product.setId]?.status === 'sold_out'
+                        ? 'Hết hàng'
+                        : `Còn ${storeWaves[product.setId]?.remainingBoxes ?? product.stock} Box`}
+                    </span>
                   </div>
 
                   <div className="my-2 flex h-44 items-center justify-center p-1">
@@ -194,9 +202,13 @@ export const HobbyShopScene: React.FC<HobbyShopSceneProps> = ({
                 >
                   <div className="flex items-center justify-between text-[10px]">
                     <span className="rounded bg-zinc-800 px-1.5 py-0.2 font-bold text-amber-300">
-                      {product.badge || 'PACK'}
+                      Đợt #{storeWaves[product.setId]?.waveNumber || 1}
                     </span>
-                    <span className="font-bold text-zinc-400">{product.language}</span>
+                    <span className="font-bold text-zinc-400">
+                      {storeWaves[product.setId]?.status === 'sold_out'
+                        ? 'Hết pack'
+                        : `${storeWaves[product.setId]?.remainingLoosePacks ?? product.stock} Pack`}
+                    </span>
                   </div>
 
                   <div className="my-2 flex h-52 items-center justify-center p-1">

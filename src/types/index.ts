@@ -135,6 +135,16 @@ export interface Product {
   boxImageUrl?: string;
 }
 
+export interface SetPrintWave {
+  setId: string;
+  waveNumber: number; // e.g. 1 (Đợt 1 - First Print Run)
+  maxBoxes: number; // e.g. 6 Boxes / Case
+  remainingBoxes: number;
+  maxLoosePacks: number; // e.g. 36 packs in active display
+  remainingLoosePacks: number;
+  status: 'available' | 'low_stock' | 'sold_out';
+}
+
 export interface PackSlot {
   slotIndex: number;
   name: string;
