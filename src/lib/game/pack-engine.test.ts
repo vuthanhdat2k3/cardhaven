@@ -76,4 +76,84 @@ describe('Pack Opening Engine', () => {
     const ultraHits = hits.filter((r) => r === 'ultra_rare' || r === 'special_illustration_rare');
     expect(ultraHits.length).toBeGreaterThanOrEqual(2);
   });
+
+  it('should follow authentic 30th celebration physical rules and never duplicate characters across 1000 opens', () => {
+    const template30th = PACK_TEMPLATES.find((t) => t.setId === 'meg-30th-en')!;
+    expect(template30th.cardsPerPack).toBe(7);
+
+    for (let i = 0; i < 1000; i++) {
+      const cards = openSingleBooster(template30th, []);
+      expect(cards).toHaveLength(7);
+
+      // Verify slot 4 is guaranteed a Pikachu variant
+      expect(cards[4].printing.name.toLowerCase()).toContain('pikachu');
+
+      // Verify slot 5 is Energy
+      expect(cards[5].printing.cardType).toBe('energy');
+
+      // Verify slot 6 is Code Card
+      expect(cards[6].printing.name).toContain('Code Card');
+
+      // Verify ID deduplication
+      const ids = cards.map((c) => c.printing.id);
+      expect(new Set(ids).size).toBe(cards.length);
+
+      // Verify Character deduplication (e.g. no 2 Lugias or 2 Charizards)
+      const nonSpecialCards = cards.filter(
+        (c) => c.printing.cardType !== 'energy' && !c.printing.name.includes('Code Card')
+      );
+      const characterNames = nonSpecialCards.map((c) =>
+        c.printing.name.split('(')[0].replace(/ex|EX|VMAX|VSTAR|V-UNION/gi, '').trim().toUpperCase()
+      );
+      expect(new Set(characterNames).size).toBe(nonSpecialCards.length);
+    }
+  });
+
+  it('should match community 2,000–4,000 pack hit rate distribution within reasonable confidence intervals', () => {
+    const template30th = PACK_TEMPLATES.find((t) => t.setId === 'meg-30th-en')!;
+    const SAMPLE_SIZE = 3000;
+    const hitCounts = {
+      double_rare: 0,
+      rare_ar: 0,
+      classic_collection: 0,
+      sar: 0,
+      gold_futuristic: 0,
+    };
+
+    for (let i = 0; i < SAMPLE_SIZE; i++) {
+      const cards = openSingleBooster(template30th, []);
+      // Slot 3 is the hit slot
+      const hit = cards[3].printing;
+      if (hit.rarity === 'double_rare') hitCounts.double_rare++;
+      if (hit.rarity === 'rare') hitCounts.rare_ar++;
+      if (hit.rarity === 'ultra_rare') hitCounts.classic_collection++;
+      if (hit.rarity === 'special_illustration_rare') hitCounts.sar++;
+      if (hit.rarity === 'hyper_rare') hitCounts.gold_futuristic++;
+    }
+
+    // Double Rare EX: ~24.5% (allow 21% - 28%)
+    const exRate = (hitCounts.double_rare / SAMPLE_SIZE) * 100;
+    expect(exRate).toBeGreaterThanOrEqual(21);
+    expect(exRate).toBeLessThanOrEqual(28);
+
+    // Illustration Rare (AR): ~20% (allow 17% - 24%)
+    const arRate = (hitCounts.rare_ar / SAMPLE_SIZE) * 100;
+    expect(arRate).toBeGreaterThanOrEqual(17);
+    expect(arRate).toBeLessThanOrEqual(24);
+
+    // Classic Collection: ~10% (allow 8% - 13%)
+    const classicRate = (hitCounts.classic_collection / SAMPLE_SIZE) * 100;
+    expect(classicRate).toBeGreaterThanOrEqual(8);
+    expect(classicRate).toBeLessThanOrEqual(13);
+
+    // SAR: ~5.5% (allow 4% - 8%)
+    const sarRate = (hitCounts.sar / SAMPLE_SIZE) * 100;
+    expect(sarRate).toBeGreaterThanOrEqual(4);
+    expect(sarRate).toBeLessThanOrEqual(8);
+
+    // Futuristic / Gold: ~1% (allow 0.3% - 2.5%)
+    const goldRate = (hitCounts.gold_futuristic / SAMPLE_SIZE) * 100;
+    expect(goldRate).toBeGreaterThanOrEqual(0.3);
+    expect(goldRate).toBeLessThanOrEqual(2.5);
+  });
 });

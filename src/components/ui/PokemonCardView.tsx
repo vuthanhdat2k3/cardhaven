@@ -179,8 +179,54 @@ export const PokemonCardView: React.FC<PokemonCardViewProps> = ({
         </div>
       )}
 
-      {/* Authentic Scanned High-Res Card Image */}
-      {hasValidImage ? (
+      {/* 30th Celebration Pikachu Stamp Watermark */}
+      {card.setId === 'meg-30th-en' && card.name.toLowerCase().includes('pikachu') && !card.name.includes('Code Card') && (
+        <div className="absolute top-2 right-2 pointer-events-none z-20">
+          <span className="rounded-full bg-amber-500/90 text-black px-1.5 py-0.5 text-[8px] font-black uppercase tracking-wider shadow-md border border-yellow-200 flex items-center space-x-0.5">
+            <span>⚡</span>
+            <span>30th</span>
+          </span>
+        </div>
+      )}
+
+      {/* Authentic Pokémon TCG Live Code Card */}
+      {card.name.includes('Code Card') || card.id.includes('code') ? (
+        <div className="relative w-full h-full rounded-2xl bg-gradient-to-br from-zinc-950 via-emerald-950/70 to-zinc-950 border-2 border-emerald-500/50 p-3 flex flex-col justify-between text-white shadow-2xl">
+          <div className="flex items-center justify-between border-b border-emerald-500/30 pb-1.5">
+            <div className="flex items-center space-x-1.5">
+              <span className="text-xl">🎟️</span>
+              <div>
+                <div className="text-[10px] font-black uppercase tracking-widest text-emerald-400">POKÉMON TCG LIVE</div>
+                <div className="text-[8px] text-zinc-400">Digital Booster Code</div>
+              </div>
+            </div>
+            <span className="rounded bg-emerald-500/20 px-1 py-0.5 text-[7px] font-mono font-bold text-emerald-300 border border-emerald-500/30">ONLINE CODE</span>
+          </div>
+
+          <div className="my-auto flex flex-col items-center justify-center p-2 rounded-xl bg-black/60 border border-white/10 text-center">
+            {/* Simulated QR Code */}
+            <div className="w-16 h-16 bg-white p-1 rounded-md flex items-center justify-center shadow-md mb-2">
+              <div className="grid grid-cols-4 gap-0.5 w-full h-full bg-zinc-900 p-0.5 rounded">
+                <div className="bg-white col-span-2 row-span-2 rounded-xs"></div>
+                <div className="bg-white"></div>
+                <div className="bg-white"></div>
+                <div className="bg-white"></div>
+                <div className="bg-white col-span-2 row-span-2 rounded-xs"></div>
+              </div>
+            </div>
+            <div className="text-[9px] font-mono font-bold tracking-widest text-amber-300 bg-zinc-900 px-2 py-0.5 rounded border border-amber-500/30">
+              CEL30-9X4K-8M2P-91L7
+            </div>
+            <p className="text-[7.5px] text-zinc-400 mt-1.5 leading-tight">
+              Quét mã QR hoặc nhập tại <span className="text-emerald-400 underline">pokemon.com/tcglive</span> để nhận booster pack kỹ thuật số.
+            </p>
+          </div>
+
+          <div className="text-[7px] text-zinc-500 text-center border-t border-white/5 pt-1">
+            © 2026 Pokémon / Nintendo / Creatures / GAME FREAK
+          </div>
+        </div>
+      ) : hasValidImage ? (
         <div className="relative w-full h-full rounded-2xl overflow-hidden flex items-center justify-center bg-zinc-950">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img

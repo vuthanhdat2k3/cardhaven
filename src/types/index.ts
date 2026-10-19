@@ -148,7 +148,7 @@ export interface SetPrintWave {
 export interface PackSlot {
   slotIndex: number;
   name: string;
-  poolCategory: 'common' | 'uncommon' | 'reverse_or_rare' | 'rare_or_higher' | 'energy';
+  poolCategory: 'common' | 'uncommon' | 'reverse_or_rare' | 'rare_or_higher' | 'energy' | 'pikachu_variant' | 'code_card';
   guaranteedRarities?: Rarity[];
 }
 

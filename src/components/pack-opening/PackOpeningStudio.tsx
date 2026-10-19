@@ -312,7 +312,22 @@ export const PackOpeningStudio: React.FC<PackOpeningStudioProps> = ({
             {/* Rarity-Tiered Celebration Banner */}
             {cardRevealed && (
               <div className="relative z-20 mb-3 animate-in zoom-in duration-300">
-                {isGodPull ? (
+                {currentCardResult.printing.name.includes('Code Card') ? (
+                  <div className="rounded-full bg-emerald-950/90 border border-emerald-400/60 px-4 py-1 text-xs font-black tracking-wider text-emerald-300 shadow-md flex items-center space-x-1.5">
+                    <span>🎟️</span>
+                    <span>POKÉMON TCG LIVE CODE CARD</span>
+                  </div>
+                ) : currentCardResult.printing.setId === 'meg-30th-en' && currentCardResult.printing.name.toLowerCase().includes('pikachu') ? (
+                  <div className="rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 px-5 py-1 text-xs font-black uppercase tracking-wider text-black shadow-lg shadow-amber-500/50 flex items-center space-x-1.5 animate-pulse">
+                    <span>⚡</span>
+                    <span>30TH PIKACHU VARIANT GUARANTEED</span>
+                    <span>⚡</span>
+                  </div>
+                ) : currentCardResult.printing.setId === 'meg-30th-en' && currentCardResult.printing.name.includes('Classic') ? (
+                  <div className="rounded-full bg-gradient-to-r from-indigo-600 via-purple-600 to-amber-500 px-5 py-1 text-xs font-black uppercase tracking-wider text-white shadow-lg shadow-indigo-500/50">
+                    🏆 CLASSIC COLLECTION VINTAGE REMAKE 🏆
+                  </div>
+                ) : isGodPull ? (
                   <div className="bg-gradient-to-r from-amber-500 via-fuchsia-500 to-amber-400 p-0.5 rounded-full shadow-[0_0_25px_rgba(234,179,8,0.8)]">
                     <div className="bg-black/90 backdrop-blur-md px-6 py-1.5 rounded-full flex items-center space-x-2">
                       <span className="text-amber-300 text-sm animate-pulse">★</span>
