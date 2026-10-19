@@ -31237,34 +31237,121 @@ export function resolveCardCdnUrl(card: CardPrinting): string {
     if (card.setNumber === 'E07') return 'https://images.pokemontcg.io/sve/7_hires.png';
     if (card.setNumber === 'E08') return 'https://images.pokemontcg.io/sve/8_hires.png';
 
+    // 30 Pikachu Variants (001 - 030)
+    const PIKACHU_30TH_URLS: Record<string, string> = {
+      'meg-30th-001': 'https://assets.tcgdex.net/en/swsh/cel25/5/high.webp',
+      'meg-30th-002': 'https://assets.tcgdex.net/en/swsh/cel25/6/high.webp',
+      'meg-30th-003': 'https://assets.tcgdex.net/en/swsh/cel25/7/high.webp',
+      'meg-30th-004': 'https://assets.tcgdex.net/en/swsh/cel25/8/high.webp',
+      'meg-30th-005': 'https://assets.tcgdex.net/en/swsh/cel25/9/high.webp',
+      'meg-30th-006': 'https://images.pokemontcg.io/cel25c/24_A.png',
+      'meg-30th-007': 'https://assets.tcgdex.net/en/xy/g1/12/high.webp',
+      'meg-30th-008': 'https://assets.tcgdex.net/en/xy/xy6/76/high.webp',
+      'meg-30th-009': 'https://assets.tcgdex.net/en/swsh/swshp/SWSH020/high.webp',
+      'meg-30th-010': 'https://assets.tcgdex.net/en/swsh/swshp/SWSH039/high.webp',
+      'meg-30th-011': 'https://assets.tcgdex.net/en/swsh/swshp/SWSH061/high.webp',
+      'meg-30th-012': 'https://assets.tcgdex.net/en/swsh/swshp/SWSH062/high.webp',
+      'meg-30th-013': 'https://assets.tcgdex.net/en/swsh/swshp/SWSH063/high.webp',
+      'meg-30th-014': 'https://assets.tcgdex.net/en/sm/smp/SM04/high.webp',
+      'meg-30th-015': 'https://assets.tcgdex.net/en/sm/smp/SM76/high.webp',
+      'meg-30th-016': 'https://assets.tcgdex.net/en/sm/smp/SM108/high.webp',
+      'meg-30th-017': 'https://assets.tcgdex.net/en/sm/smp/SM109/high.webp',
+      'meg-30th-018': 'https://assets.tcgdex.net/en/sm/smp/SM110/high.webp',
+      'meg-30th-019': 'https://assets.tcgdex.net/en/sm/smp/SM111/high.webp',
+      'meg-30th-020': 'https://assets.tcgdex.net/en/sm/smp/SM112/high.webp',
+      'meg-30th-021': 'https://assets.tcgdex.net/en/sm/smp/SM113/high.webp',
+      'meg-30th-022': 'https://assets.tcgdex.net/en/sm/smp/SM114/high.webp',
+      'meg-30th-023': 'https://assets.tcgdex.net/en/sm/det1/10/high.webp',
+      'meg-30th-024': 'https://assets.tcgdex.net/en/swsh/swshp/SWSH139/high.webp',
+      'meg-30th-025': 'https://assets.tcgdex.net/en/swsh/swshp/SWSH140/high.webp',
+      'meg-30th-026': 'https://assets.tcgdex.net/en/swsh/swshp/SWSH141/high.webp',
+      'meg-30th-027': 'https://assets.tcgdex.net/en/swsh/swshp/SWSH142/high.webp',
+      'meg-30th-028': 'https://assets.tcgdex.net/en/base/base1/58/high.webp',
+      'meg-30th-029': 'https://assets.tcgdex.net/en/base/basep/1/high.webp',
+      'meg-30th-030': 'https://assets.tcgdex.net/en/sv/sv03.5/173/high.webp',
+    };
+    if (PIKACHU_30TH_URLS[card.id]) {
+      return PIKACHU_30TH_URLS[card.id];
+    }
+
     // Classic Collection C01 - C30
-    if (card.setNumber === 'C01') return 'https://images.pokemontcg.io/cel25c/4_hires.png';
-    if (card.setNumber === 'C02') return 'https://images.pokemontcg.io/cel25c/2_hires.png';
-    if (card.setNumber === 'C03') return 'https://images.pokemontcg.io/cel25c/15_hires.png';
-    if (card.setNumber === 'C04') return 'https://images.pokemontcg.io/cel25c/17_hires.png';
-    if (card.setNumber === 'C05') return 'https://images.pokemontcg.io/cel25c/66_hires.png';
-    if (card.setNumber === 'C06') return 'https://images.pokemontcg.io/cel25c/9_hires.png';
-    if (card.setNumber === 'C07') return 'https://assets.tcgdex.net/en/xy/xy6/76/high.webp';
-    if (card.setNumber === 'C08') return 'https://images.pokemontcg.io/cel25c/15_hires.png';
-    if (card.setNumber === 'C09') return 'https://images.pokemontcg.io/cel25/24_hires.png';
-    if (card.setNumber === 'C10') return 'https://images.pokemontcg.io/cel25c/60_hires.png';
+    const CLASSIC_30TH_URLS: Record<string, string> = {
+      C01: 'https://images.pokemontcg.io/cel25c/4_A.png',
+      C02: 'https://images.pokemontcg.io/cel25c/2_A.png',
+      C03: 'https://images.pokemontcg.io/cel25c/15_A.png',
+      C04: 'https://images.pokemontcg.io/cel25c/17_hires.png',
+      C05: 'https://images.pokemontcg.io/cel25c/66_A.png',
+      C06: 'https://images.pokemontcg.io/cel25c/9_hires.png',
+      C07: 'https://assets.tcgdex.net/en/xy/xy6/76/high.webp',
+      C08: 'https://images.pokemontcg.io/cel25c/15_C.png',
+      C09: 'https://images.pokemontcg.io/cel25c/24_A.png',
+      C10: 'https://images.pokemontcg.io/cel25c/60_hires.png',
+      C11: 'https://images.pokemontcg.io/cel25c/8_A.png',
+      C12: 'https://images.pokemontcg.io/cel25c/15_D.png',
+      C13: 'https://assets.tcgdex.net/en/swsh/cel25/20/high.webp',
+      C14: 'https://images.pokemontcg.io/cel25c/15_B.png',
+      C15: 'https://assets.tcgdex.net/en/swsh/cel25/23/high.webp',
+      C16: 'https://assets.tcgdex.net/en/swsh/swsh12.5/GG44/high.webp',
+      C17: 'https://assets.tcgdex.net/en/swsh/cel25/16/high.webp',
+      C18: 'https://assets.tcgdex.net/en/swsh/cel25/2/high.webp',
+      C19: 'https://assets.tcgdex.net/en/swsh/cel25/10/high.webp',
+      C20: 'https://assets.tcgdex.net/en/swsh/swsh12.5/GG44/high.webp',
+      C21: 'https://assets.tcgdex.net/en/swsh/cel25/12/high.webp',
+      C22: 'https://assets.tcgdex.net/en/xy/xy6/76/high.webp',
+      C23: 'https://assets.tcgdex.net/en/base/base1/58/high.webp',
+      C24: 'https://images.pokemontcg.io/cel25c/66_A.png',
+      C25: 'https://assets.tcgdex.net/en/swsh/cel25/22/high.webp',
+      C26: 'https://assets.tcgdex.net/en/swsh/cel25/11/high.webp',
+      C27: 'https://assets.tcgdex.net/en/sv/sv08.5/152/high.webp',
+      C28: 'https://assets.tcgdex.net/en/sv/sv08.5/153/high.webp',
+      C29: 'https://assets.tcgdex.net/en/sv/sv08.5/151/high.webp',
+      C30: 'https://assets.tcgdex.net/en/sv/sv03.5/199/high.webp',
+    };
+    if (CLASSIC_30TH_URLS[card.setNumber]) {
+      return CLASSIC_30TH_URLS[card.setNumber];
+    }
 
-    // Pikachu Variants (001 - 030)
-    if (card.id === 'meg-30th-001') return 'https://images.pokemontcg.io/cel25/5_hires.png';
-    if (card.id === 'meg-30th-002') return 'https://images.pokemontcg.io/cel25/6_hires.png';
-    if (card.id === 'meg-30th-003') return 'https://images.pokemontcg.io/cel25/7_hires.png';
-    if (card.id === 'meg-30th-004') return 'https://images.pokemontcg.io/cel25/8_hires.png';
-    if (card.id === 'meg-30th-005') return 'https://images.pokemontcg.io/cel25/9_hires.png';
-    if (card.id === 'meg-30th-006') return 'https://images.pokemontcg.io/cel25/24_hires.png';
-    if (card.id === 'meg-30th-007') return 'https://assets.tcgdex.net/en/xy/g1/12/high.webp';
-    if (card.id === 'meg-30th-008') return 'https://assets.tcgdex.net/en/xy/xy6/76/high.webp';
-
-    // Gold Rarities
+    // Gold Rarities (156 - 158)
     if (card.setNumber === '156') return 'https://images.pokemontcg.io/cel25/5_hires.png';
     if (card.setNumber === '157') return 'https://images.pokemontcg.io/cel25/7_hires.png';
     if (card.setNumber === '158') return 'https://images.pokemontcg.io/cel25/25_hires.png';
 
-    return 'https://assets.tcgdex.net/en/swsh/cel25/22/high.webp';
+    // Holo Legendaries & Milestones: match character name
+    const n = card.name.toLowerCase();
+    if (n.includes('charizard')) return 'https://assets.tcgdex.net/en/sv/sv03.5/006/high.webp';
+    if (n.includes('blastoise')) return 'https://assets.tcgdex.net/en/sv/sv03.5/009/high.webp';
+    if (n.includes('venusaur')) return 'https://assets.tcgdex.net/en/sv/sv03.5/003/high.webp';
+    if (n.includes('mewtwo')) return 'https://assets.tcgdex.net/en/swsh/swsh12.5/GG44/high.webp';
+    if (n.includes('mew')) return 'https://assets.tcgdex.net/en/swsh/cel25/11/high.webp';
+    if (n.includes('articuno')) return 'https://assets.tcgdex.net/en/sv/sv03.5/144/high.webp';
+    if (n.includes('zapdos')) return 'https://assets.tcgdex.net/en/sv/sv03.5/145/high.webp';
+    if (n.includes('moltres')) return 'https://assets.tcgdex.net/en/sv/sv03.5/146/high.webp';
+    if (n.includes('dragonite')) return 'https://assets.tcgdex.net/en/sv/sv03.5/149/high.webp';
+    if (n.includes('gengar')) return 'https://assets.tcgdex.net/en/sv/sv03.5/094/high.webp';
+    if (n.includes('raikou')) return 'https://assets.tcgdex.net/en/swsh/swsh12.5/GG41/high.webp';
+    if (n.includes('entei')) return 'https://assets.tcgdex.net/en/swsh/swsh12.5/GG36/high.webp';
+    if (n.includes('suicune')) return 'https://assets.tcgdex.net/en/swsh/swsh12.5/GG38/high.webp';
+    if (n.includes('ho-oh')) return 'https://assets.tcgdex.net/en/swsh/cel25/1/high.webp';
+    if (n.includes('lugia')) return 'https://assets.tcgdex.net/en/swsh/cel25/22/high.webp';
+    if (n.includes('reshiram')) return 'https://assets.tcgdex.net/en/swsh/cel25/2/high.webp';
+    if (n.includes('kyogre')) return 'https://assets.tcgdex.net/en/swsh/cel25/3/high.webp';
+    if (n.includes('palkia')) return 'https://assets.tcgdex.net/en/swsh/cel25/4/high.webp';
+    if (n.includes('zekrom')) return 'https://assets.tcgdex.net/en/swsh/cel25/10/high.webp';
+    if (n.includes('xerneas')) return 'https://assets.tcgdex.net/en/swsh/cel25/12/high.webp';
+    if (n.includes('cosmog')) return 'https://assets.tcgdex.net/en/swsh/cel25/13/high.webp';
+    if (n.includes('cosmoem')) return 'https://assets.tcgdex.net/en/swsh/cel25/14/high.webp';
+    if (n.includes('lunala')) return 'https://assets.tcgdex.net/en/swsh/cel25/15/high.webp';
+    if (n.includes('zacian')) return 'https://assets.tcgdex.net/en/swsh/cel25/16/high.webp';
+    if (n.includes('groudon')) return 'https://assets.tcgdex.net/en/swsh/cel25/17/high.webp';
+    if (n.includes('zamazenta')) return 'https://assets.tcgdex.net/en/swsh/cel25/18/high.webp';
+    if (n.includes('yveltal')) return 'https://assets.tcgdex.net/en/swsh/cel25/19/high.webp';
+    if (n.includes('dialga')) return 'https://assets.tcgdex.net/en/swsh/cel25/20/high.webp';
+    if (n.includes('solgaleo')) return 'https://assets.tcgdex.net/en/swsh/cel25/21/high.webp';
+    if (n.includes('rayquaza')) return 'https://assets.tcgdex.net/en/xy/xy6/76/high.webp';
+    if (n.includes('giratina')) return 'https://assets.tcgdex.net/en/swsh/swsh12.5/GG69/high.webp';
+    if (n.includes('arceus')) return 'https://assets.tcgdex.net/en/swsh/swsh12.5/GG70/high.webp';
+
+    return '';
   }
 
   return '';
