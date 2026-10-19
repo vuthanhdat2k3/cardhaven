@@ -467,7 +467,9 @@ export const PackOpeningStudio: React.FC<PackOpeningStudioProps> = ({
                 <div>
                   <span className="text-[10px] uppercase font-bold text-amber-400">Top Pull Đẹp Nhất</span>
                   <h4 className="text-base font-black text-white">{session.topPull.name}</h4>
-                  {session.topPull.estimatedValue > 0 && !['common', 'uncommon'].includes(session.topPull.rarity) ? (
+                  {session.topPull.estimatedValue > 0 &&
+                  !['common', 'uncommon'].includes(session.topPull.rarity) &&
+                  session.topPull.cardType !== 'energy' ? (
                     <p className="text-xs text-amber-300 font-bold">
                       Trị giá thị trường: ${session.topPull.estimatedValue.toFixed(2)}
                     </p>
@@ -486,7 +488,10 @@ export const PackOpeningStudio: React.FC<PackOpeningStudioProps> = ({
             {/* Grid of All Cards Pulled */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 w-full">
               {session.cards.map((res, idx) => {
-                const hasMarketPrice = res.printing.estimatedValue > 0 && !['common', 'uncommon'].includes(res.printing.rarity);
+                const hasMarketPrice =
+                  res.printing.estimatedValue > 0 &&
+                  !['common', 'uncommon'].includes(res.printing.rarity) &&
+                  res.printing.cardType !== 'energy';
                 return (
                   <div key={idx} className="relative flex flex-col items-center">
                     <PokemonCardView

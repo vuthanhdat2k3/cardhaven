@@ -194,12 +194,16 @@ export function openSingleBooster(
       }
     } else if (slot.poolCategory === 'reverse_or_rare') {
       if (template.setId === 'meg-30th-en') {
-        // 30th Celebration Holo slots: Pick distinct 30th Holo Pokémon from Main Set (031-078)
+        // 30th Celebration Holo slots: Pick distinct 30th Holo Pokémon from Main Set (031-054)
         const holos = nonSpecialCards.filter(
-          (c) => c.rarity === 'holo_rare' && !c.name.toLowerCase().includes('pikachu') && !c.setNumber.startsWith('E')
+          (c) =>
+            c.rarity === 'holo_rare' &&
+            c.cardType === 'pokemon' &&
+            !c.name.toLowerCase().includes('pikachu') &&
+            !c.setNumber.startsWith('E') &&
+            !c.setNumber.startsWith('C')
         );
-        const nonPikachuFallback = nonSpecialCards.filter((c) => !c.name.toLowerCase().includes('pikachu'));
-        picked = pickStrictlyUnique(holos, nonPikachuFallback, nonPikachuFallback, seenIds, seenCharacters);
+        picked = pickStrictlyUnique(holos, holos, holos, seenIds, seenCharacters);
       } else {
         const targetRarity = pickWeightedRarity(REVERSE_SLOT_WEIGHTS);
         const candidates = nonSpecialCards.filter((c) => c.rarity === targetRarity);
@@ -344,7 +348,12 @@ export function createOpeningSession(
   const topPull = [...cards].sort((a, b) => b.printing.estimatedValue - a.printing.estimatedValue)[0].printing;
   const totalMarketValue = Number(
     cards
-      .filter((c) => !['common', 'uncommon'].includes(c.printing.rarity) && c.printing.estimatedValue > 0)
+      .filter(
+        (c) =>
+          !['common', 'uncommon'].includes(c.printing.rarity) &&
+          c.printing.cardType !== 'energy' &&
+          c.printing.estimatedValue > 0
+      )
       .reduce((sum, c) => sum + c.printing.estimatedValue, 0)
       .toFixed(2)
   );

@@ -85,11 +85,11 @@ describe('Pack Opening Engine', () => {
       const cards = openSingleBooster(template30th, []);
       expect(cards).toHaveLength(7);
 
+      // Verify slot 0 is Energy
+      expect(cards[0].printing.cardType).toBe('energy');
+
       // Verify slot 4 is guaranteed a Pikachu variant
       expect(cards[4].printing.name.toLowerCase()).toContain('pikachu');
-
-      // Verify slot 5 is Energy
-      expect(cards[5].printing.cardType).toBe('energy');
 
       // Verify slot 6 is Code Card
       expect(cards[6].printing.name).toContain('Code Card');
@@ -122,8 +122,8 @@ describe('Pack Opening Engine', () => {
 
     for (let i = 0; i < SAMPLE_SIZE; i++) {
       const cards = openSingleBooster(template30th, []);
-      // Slot 3 is the hit slot
-      const hit = cards[3].printing;
+      // Slot 5 is the climax hit slot
+      const hit = cards[5].printing;
       if (hit.rarity === 'double_rare') hitCounts.double_rare++;
       if (hit.rarity === 'rare') hitCounts.rare_ar++;
       if (hit.rarity === 'ultra_rare') hitCounts.classic_collection++;

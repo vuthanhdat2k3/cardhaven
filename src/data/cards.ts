@@ -27136,7 +27136,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 1.50,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Venusaur (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27160,7 +27160,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 1.80,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Blastoise (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27184,7 +27184,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 8.50,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Charizard (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27208,7 +27208,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 3.50,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Mewtwo (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27232,7 +27232,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 5.00,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Mew (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27256,7 +27256,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 1.50,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Articuno (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27280,7 +27280,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 1.50,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Zapdos (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27304,7 +27304,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 1.50,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Moltres (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27328,7 +27328,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 2.50,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Dragonite (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27352,7 +27352,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 2.80,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Gengar (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27376,7 +27376,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 1.20,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Raikou (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27400,7 +27400,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 1.20,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Entei (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27424,7 +27424,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 2.00,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Suicune (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27448,7 +27448,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 4.50,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Lugia (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27472,7 +27472,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 1.50,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Ho-Oh (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27496,7 +27496,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 1.60,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Celebi (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27520,7 +27520,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 1.80,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Tyranitar (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27544,7 +27544,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 1.20,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Kyogre (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27568,7 +27568,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 1.20,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Groudon (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27592,7 +27592,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 3.20,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Rayquaza (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27616,7 +27616,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 1.50,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Jirachi (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27640,7 +27640,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 1.80,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Deoxys (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27664,7 +27664,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 1.50,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Dialga (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -27688,7 +27688,7 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 1.50,
+    estimatedValue: 0.00,
     flavorText: 'Iconic 30th Anniversary edition representing the historic legacy of Palkia (30th Holo).',
     cardType: 'pokemon',
     hp: 130,
@@ -30994,13 +30994,13 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     totalInSet: 199,
     name: '30th Celebration Grass Energy Foil',
     
-    rarity: 'holo_rare',
+    rarity: 'common',
     language: 'EN',
     artist: '5ban Graphics',
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 3.50,
+    estimatedValue: 0.00,
     flavorText: 'Foil basic Grass Energy with the official 30th Anniversary watermark pattern.',
     cardType: 'energy',
     
@@ -31016,13 +31016,13 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     totalInSet: 199,
     name: '30th Celebration Fire Energy Foil',
     
-    rarity: 'holo_rare',
+    rarity: 'common',
     language: 'EN',
     artist: '5ban Graphics',
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 4.00,
+    estimatedValue: 0.00,
     flavorText: 'Foil basic Fire Energy with the official 30th Anniversary watermark pattern.',
     cardType: 'energy',
     
@@ -31038,13 +31038,13 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     totalInSet: 199,
     name: '30th Celebration Water Energy Foil',
     
-    rarity: 'holo_rare',
+    rarity: 'common',
     language: 'EN',
     artist: '5ban Graphics',
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 3.50,
+    estimatedValue: 0.00,
     flavorText: 'Foil basic Water Energy with the official 30th Anniversary watermark pattern.',
     cardType: 'energy',
     
@@ -31060,13 +31060,13 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     totalInSet: 199,
     name: '30th Celebration Lightning Energy Foil',
     
-    rarity: 'holo_rare',
+    rarity: 'common',
     language: 'EN',
     artist: '5ban Graphics',
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 4.00,
+    estimatedValue: 0.00,
     flavorText: 'Foil basic Lightning Energy with the official 30th Anniversary watermark pattern.',
     cardType: 'energy',
     
@@ -31082,13 +31082,13 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     totalInSet: 199,
     name: '30th Celebration Psychic Energy Foil',
     
-    rarity: 'holo_rare',
+    rarity: 'common',
     language: 'EN',
     artist: '5ban Graphics',
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 4.50,
+    estimatedValue: 0.00,
     flavorText: 'Foil basic Psychic Energy with the official 30th Anniversary watermark pattern.',
     cardType: 'energy',
     
@@ -31104,13 +31104,13 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     totalInSet: 199,
     name: '30th Celebration Fighting Energy Foil',
     
-    rarity: 'holo_rare',
+    rarity: 'common',
     language: 'EN',
     artist: '5ban Graphics',
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 3.00,
+    estimatedValue: 0.00,
     flavorText: 'Foil basic Fighting Energy with the official 30th Anniversary watermark pattern.',
     cardType: 'energy',
     
@@ -31126,13 +31126,13 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     totalInSet: 199,
     name: '30th Celebration Darkness Energy Foil',
     
-    rarity: 'holo_rare',
+    rarity: 'common',
     language: 'EN',
     artist: '5ban Graphics',
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 4.50,
+    estimatedValue: 0.00,
     flavorText: 'Foil basic Darkness Energy with the official 30th Anniversary watermark pattern.',
     cardType: 'energy',
     
@@ -31148,13 +31148,13 @@ export const CARDS_MEG_30TH_EN: CardPrinting[] = [
     totalInSet: 199,
     name: '30th Celebration Metal Energy Foil',
     
-    rarity: 'holo_rare',
+    rarity: 'common',
     language: 'EN',
     artist: '5ban Graphics',
     isHolo: true,
     isSecretRare: false,
     foilPattern: 'cosmos_stars',
-    estimatedValue: 4.00,
+    estimatedValue: 0.00,
     flavorText: 'Foil basic Metal Energy with the official 30th Anniversary watermark pattern.',
     cardType: 'energy',
     
@@ -31318,13 +31318,33 @@ export function resolveCardCdnUrl(card: CardPrinting): string {
 
     // Holo Legendaries & Milestones: match character name
     const n = card.name.toLowerCase();
-    if (n.includes('charizard')) return 'https://assets.tcgdex.net/en/sv/sv03.5/006/high.webp';
-    if (n.includes('blastoise')) return 'https://assets.tcgdex.net/en/sv/sv03.5/009/high.webp';
-    if (n.includes('venusaur')) return 'https://assets.tcgdex.net/en/sv/sv03.5/003/high.webp';
-    if (n.includes('mewtwo')) return 'https://assets.tcgdex.net/en/swsh/swsh12.5/GG44/high.webp';
+    const isExOrMega =
+      n.includes(' ex') ||
+      n.includes('mega') ||
+      n.startsWith('m ') ||
+      card.stage === 'ex' ||
+      card.stage === 'VMAX' ||
+      card.rarity === 'double_rare';
+
+    if (isExOrMega) {
+      if (n.includes('charizard')) return 'https://assets.tcgdex.net/en/sv/sv03.5/006/high.webp';
+      if (n.includes('blastoise')) return 'https://assets.tcgdex.net/en/sv/sv03.5/009/high.webp';
+      if (n.includes('venusaur')) return 'https://assets.tcgdex.net/en/sv/sv03.5/003/high.webp';
+      if (n.includes('zapdos')) return 'https://assets.tcgdex.net/en/sv/sv03.5/145/high.webp';
+      if (n.includes('rayquaza')) return 'https://assets.tcgdex.net/en/xy/xy6/76/high.webp';
+      if (n.includes('mewtwo')) return 'https://assets.tcgdex.net/en/swsh/swsh12.5/GG44/high.webp';
+      if (n.includes('giratina')) return 'https://assets.tcgdex.net/en/swsh/swsh12.5/GG69/high.webp';
+      if (n.includes('arceus')) return 'https://assets.tcgdex.net/en/swsh/swsh12.5/GG70/high.webp';
+    }
+
+    // Standard Non-EX Holo Artworks (for 30th Holo Pokémon 031-054)
+    if (n.includes('charizard')) return 'https://assets.tcgdex.net/en/swsh/pgo/10/high.webp';
+    if (n.includes('blastoise')) return 'https://assets.tcgdex.net/en/swsh/pgo/17/high.webp';
+    if (n.includes('venusaur')) return 'https://assets.tcgdex.net/en/swsh/pgo/3/high.webp';
+    if (n.includes('mewtwo')) return 'https://assets.tcgdex.net/en/swsh/pgo/30/high.webp';
     if (n.includes('mew')) return 'https://assets.tcgdex.net/en/swsh/cel25/11/high.webp';
     if (n.includes('articuno')) return 'https://assets.tcgdex.net/en/sv/sv03.5/144/high.webp';
-    if (n.includes('zapdos')) return 'https://assets.tcgdex.net/en/sv/sv03.5/145/high.webp';
+    if (n.includes('zapdos')) return 'https://assets.tcgdex.net/en/swsh/swsh12.5/41/high.webp';
     if (n.includes('moltres')) return 'https://assets.tcgdex.net/en/sv/sv03.5/146/high.webp';
     if (n.includes('dragonite')) return 'https://assets.tcgdex.net/en/sv/sv03.5/149/high.webp';
     if (n.includes('gengar')) return 'https://assets.tcgdex.net/en/sv/sv03.5/094/high.webp';
@@ -31347,9 +31367,9 @@ export function resolveCardCdnUrl(card: CardPrinting): string {
     if (n.includes('yveltal')) return 'https://assets.tcgdex.net/en/swsh/cel25/19/high.webp';
     if (n.includes('dialga')) return 'https://assets.tcgdex.net/en/swsh/cel25/20/high.webp';
     if (n.includes('solgaleo')) return 'https://assets.tcgdex.net/en/swsh/cel25/21/high.webp';
-    if (n.includes('rayquaza')) return 'https://assets.tcgdex.net/en/xy/xy6/76/high.webp';
-    if (n.includes('giratina')) return 'https://assets.tcgdex.net/en/swsh/swsh12.5/GG69/high.webp';
-    if (n.includes('arceus')) return 'https://assets.tcgdex.net/en/swsh/swsh12.5/GG70/high.webp';
+    if (n.includes('rayquaza')) return 'https://assets.tcgdex.net/en/swsh/swsh12/130/high.webp';
+    if (n.includes('giratina')) return 'https://assets.tcgdex.net/en/swsh/swsh11/130/high.webp';
+    if (n.includes('arceus')) return 'https://assets.tcgdex.net/en/swsh/swsh9/83/high.webp';
 
     return '';
   }
