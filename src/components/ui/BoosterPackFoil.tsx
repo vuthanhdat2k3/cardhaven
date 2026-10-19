@@ -19,6 +19,16 @@ export const BoosterPackFoil: React.FC<BoosterPackFoilProps> = ({
   className = '',
 }) => {
   const isJP = product.language === 'JP';
+  const [imgError, setImgError] = React.useState(false);
+  const [glarePos, setGlarePos] = React.useState({ x: 50, y: 50 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!interactive) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setGlarePos({ x, y });
+  };
 
   // Proportions: Physical booster packs are ~65mm x 120mm (~1 : 1.85)
   const sizeClasses = {
@@ -32,15 +42,19 @@ export const BoosterPackFoil: React.FC<BoosterPackFoilProps> = ({
   const is151 = product.setId.includes('151');
   const isPrismatic = product.setId.includes('pre');
   const isCrownZenith = product.setId.includes('crz');
+  const hasValidImage = Boolean(product.imageUrl) && !imgError;
 
   return (
     <div
       onClick={onClick}
+      onMouseMove={handleMouseMove}
       className={`group relative ${sizeClasses} rounded-lg overflow-hidden flex flex-col justify-between shadow-2xl select-none transition-all duration-300 ${
         interactive ? 'cursor-pointer hover:-translate-y-2 hover:shadow-amber-500/30 active:scale-98' : ''
       } ${className}`}
       style={{
-        background: is151
+        background: hasValidImage
+          ? 'transparent'
+          : is151
           ? isJP
             ? 'linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #064e3b 80%, #022c22 100%)'
             : 'linear-gradient(135deg, #18181b 0%, #3f3f46 30%, #7f1d1d 70%, #18181b 100%)'
@@ -49,28 +63,56 @@ export const BoosterPackFoil: React.FC<BoosterPackFoilProps> = ({
           : 'linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #78350f 85%, #451a03 100%)',
       }}
     >
-      {/* Dynamic Foil Reflection Overlay */}
-      <div className="absolute inset-0 foil-holo-sheen opacity-60 pointer-events-none z-20" />
-      <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none z-20" />
+      {/* Authentic Scanned Pack Render */}
+      {hasValidImage ? (
+        <div className="relative w-full h-full flex items-center justify-center overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            onError={() => setImgError(true)}
+            className="w-full h-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)]"
+            loading="lazy"
+          />
 
-      {/* ========================================================= */}
-      {/* TOP HEAT-SEALED CRIMP WITH SOMBRERO PUNCH HOLE */}
-      {/* ========================================================= */}
-      <div className="relative z-10 w-full h-8 bg-gradient-to-b from-zinc-700 via-zinc-400 to-zinc-600 border-b border-black/40 flex flex-col items-center justify-center shadow-inner">
-        {/* Serrated heat-seal crimp indent lines */}
-        <div className="absolute inset-x-0 top-0 h-1 bg-white/40" />
-        <div className="flex space-x-0.5 w-full justify-center opacity-40">
-          {Array.from({ length: 28 }).map((_, i) => (
-            <div key={i} className="w-0.5 h-6 bg-black" />
-          ))}
-        </div>
+          {/* Dynamic Foil Reflection Sheen */}
+          <div className="absolute inset-0 foil-holo-sheen opacity-35 pointer-events-none mix-blend-color-dodge z-20" />
 
-        {/* Sombrero Retail Peg Hanging Punch Hole */}
-        <div className="absolute top-1.5 flex flex-col items-center">
-          <div className="h-1.5 w-5 rounded-full bg-zinc-900 border border-white/40 shadow-inner" />
-          <div className="h-2 w-2 bg-zinc-900 -mt-1 rounded-b-sm border-b border-white/40" />
+          {/* Interactive Cursor Glare */}
+          {interactive && (
+            <div
+              className="absolute inset-0 pointer-events-none z-30 transition-opacity duration-200 opacity-0 group-hover:opacity-100"
+              style={{
+                background: `radial-gradient(circle at ${glarePos.x}% ${glarePos.y}%, rgba(255, 255, 255, 0.45) 0%, transparent 65%)`,
+                mixBlendMode: 'overlay',
+              }}
+            />
+          )}
         </div>
-      </div>
+      ) : (
+        <>
+          {/* Dynamic Foil Reflection Overlay */}
+          <div className="absolute inset-0 foil-holo-sheen opacity-60 pointer-events-none z-20" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent pointer-events-none z-20" />
+
+          {/* ========================================================= */}
+          {/* TOP HEAT-SEALED CRIMP WITH SOMBRERO PUNCH HOLE */}
+          {/* ========================================================= */}
+          <div className="relative z-10 w-full h-8 bg-gradient-to-b from-zinc-700 via-zinc-400 to-zinc-600 border-b border-black/40 flex flex-col items-center justify-center shadow-inner">
+            {/* Serrated heat-seal crimp indent lines */}
+            <div className="absolute inset-x-0 top-0 h-1 bg-white/40" />
+            <div className="flex space-x-0.5 w-full justify-center opacity-40">
+              {Array.from({ length: 28 }).map((_, i) => (
+                <div key={i} className="w-0.5 h-6 bg-black" />
+              ))}
+            </div>
+
+            {/* Sombrero Retail Peg Hanging Punch Hole */}
+            <div className="absolute top-1.5 flex flex-col items-center">
+              <div className="h-1.5 w-5 rounded-full bg-zinc-900 border border-white/40 shadow-inner" />
+              <div className="h-2 w-2 bg-zinc-900 -mt-1 rounded-b-sm border-b border-white/40" />
+            </div>
+          </div>
 
       {/* ========================================================= */}
       {/* PACK ARTWORK & BRANDING */}
@@ -186,6 +228,8 @@ export const BoosterPackFoil: React.FC<BoosterPackFoilProps> = ({
           ))}
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 };

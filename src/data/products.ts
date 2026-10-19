@@ -24,6 +24,7 @@ export const PRODUCTS: Product[] = [
     accentColor: '#dc2626',
     rating: 4.9,
     releaseDate: '2023-09-22',
+    imageUrl: '/assets/packs/sv-151-pack.webp',
   },
   {
     id: 'prod-pre-pack',
@@ -45,6 +46,7 @@ export const PRODUCTS: Product[] = [
     accentColor: '#a855f7',
     rating: 5.0,
     releaseDate: '2025-01-17',
+    imageUrl: '/assets/packs/sv-pre-pack.png',
   },
   {
     id: 'prod-jp151-pack',
@@ -66,6 +68,7 @@ export const PRODUCTS: Product[] = [
     accentColor: '#059669',
     rating: 4.95,
     releaseDate: '2023-06-16',
+    imageUrl: '/assets/packs/sv-151-jp-pack.webp',
   },
   {
     id: 'prod-crz-pack',
@@ -87,6 +90,7 @@ export const PRODUCTS: Product[] = [
     accentColor: '#eab308',
     rating: 4.88,
     releaseDate: '2023-01-20',
+    imageUrl: '/assets/packs/swsh-crz-pack.webp',
   },
 
   // ==========================================
@@ -112,6 +116,7 @@ export const PRODUCTS: Product[] = [
     accentColor: '#9333ea',
     rating: 4.98,
     releaseDate: '2025-01-17',
+    boxImageUrl: '/assets/boxes/sv-pre-box.png',
   },
   {
     id: 'prod-sv151-bundle',
@@ -133,6 +138,7 @@ export const PRODUCTS: Product[] = [
     accentColor: '#ef4444',
     rating: 4.85,
     releaseDate: '2023-09-22',
+    boxImageUrl: '/assets/boxes/sv-151-bundle.png',
   },
   {
     id: 'prod-jp151-box',
@@ -154,6 +160,7 @@ export const PRODUCTS: Product[] = [
     accentColor: '#0d9488',
     rating: 5.0,
     releaseDate: '2023-06-16',
+    boxImageUrl: '/assets/boxes/sv-151-jp-box.png',
   },
 
   // ==========================================
@@ -179,6 +186,7 @@ export const PRODUCTS: Product[] = [
     accentColor: '#ea580c',
     rating: 4.92,
     releaseDate: '2023-09-22',
+    boxImageUrl: '/assets/boxes/sv-151-etb.png',
   },
   {
     id: 'prod-pre-etb',
@@ -200,6 +208,7 @@ export const PRODUCTS: Product[] = [
     accentColor: '#c026d3',
     rating: 4.96,
     releaseDate: '2025-01-17',
+    boxImageUrl: '/assets/boxes/sv-pre-etb.png',
   },
 
   // ==========================================
@@ -225,6 +234,7 @@ export const PRODUCTS: Product[] = [
     accentColor: '#b91c1c',
     rating: 4.97,
     releaseDate: '2023-10-06',
+    boxImageUrl: '/assets/boxes/sv-151-upc.png',
   },
 ];
 

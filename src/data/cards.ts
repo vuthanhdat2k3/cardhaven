@@ -629,4 +629,49 @@ export const CARD_PRINTINGS: CardPrinting[] = [
   },
 ];
 
+export function resolveCardCdnUrl(card: CardPrinting): string {
+  if (card.setId === 'sv-151-en') {
+    if (card.setNumber === 'E01') return 'https://images.pokemontcg.io/sve/1_hires.png';
+    if (card.setNumber === 'E02') return 'https://images.pokemontcg.io/sve/2_hires.png';
+    if (card.setNumber === 'E03') return 'https://images.pokemontcg.io/sve/3_hires.png';
+    if (card.setNumber === 'E04') return 'https://images.pokemontcg.io/sve/4_hires.png';
+    if (card.setNumber === 'E05') return 'https://images.pokemontcg.io/sve/5_hires.png';
+    return `https://assets.tcgdex.net/en/sv/sv03.5/${card.setNumber}/high.webp`;
+  }
+
+  if (card.setId === 'sv-151-jp') {
+    return `https://assets.tcgdex.net/ja/SV/SV2a/${card.setNumber}/high.webp`;
+  }
+
+  if (card.setId === 'swsh-crz-en') {
+    return `https://assets.tcgdex.net/en/swsh/swsh12.5/${card.setNumber}/high.webp`;
+  }
+
+  if (card.setId === 'sv-pre-en') {
+    return `https://assets.tcgdex.net/en/sv/sv08.5/${card.setNumber}/high.webp`;
+  }
+
+  return '';
+}
+
+export function resolveCardImageUrl(card: CardPrinting): string {
+  if (card.imageUrl) return card.imageUrl;
+
+  // Local assets are 100% offline & zero network latency
+  if (card.setNumber === 'E01') return '/assets/cards/energy-grass.png';
+  if (card.setNumber === 'E02') return '/assets/cards/energy-fire.png';
+  if (card.setNumber === 'E03') return '/assets/cards/energy-water.png';
+  if (card.setNumber === 'E04') return '/assets/cards/energy-lightning.png';
+  if (card.setNumber === 'E05') return '/assets/cards/energy-psychic.png';
+
+  return `/assets/cards/${card.id.toLowerCase()}.webp`;
+}
+
+// Ensure all card objects have their authentic image URLs
+CARD_PRINTINGS.forEach((c) => {
+  if (!c.imageUrl) {
+    c.imageUrl = resolveCardImageUrl(c);
+  }
+});
+
 export const CARDS_MAP = new Map(CARD_PRINTINGS.map((c) => [c.id, c]));

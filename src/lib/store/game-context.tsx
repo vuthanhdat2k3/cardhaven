@@ -113,6 +113,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         if (parsed.user) setUser(parsed.user);
         if (parsed.settings) setSettings(parsed.settings);
         if (parsed.wallet) setWallet(parsed.wallet);

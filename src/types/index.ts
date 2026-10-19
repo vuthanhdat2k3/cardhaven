@@ -98,6 +98,7 @@ export interface CardPrinting {
   illustrationTheme: string;
   weakness?: { type: PokemonEnergyType; modifier: string };
   retreatCost?: number;
+  imageUrl?: string;
 }
 
 export type ProductType =
@@ -130,6 +131,8 @@ export interface Product {
   accentColor: string;
   rating: number;
   releaseDate: string;
+  imageUrl?: string;
+  boxImageUrl?: string;
 }
 
 export interface PackSlot {

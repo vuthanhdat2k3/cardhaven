@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { CardPrinting, Rarity } from '@/types';
+import { resolveCardCdnUrl, resolveCardImageUrl } from '@/data/cards';
 import { EnergyIcon } from './EnergyIcon';
 import { Lock } from 'lucide-react';
 
@@ -38,6 +39,27 @@ export const PokemonCardView: React.FC<PokemonCardViewProps> = ({
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
   const [glarePos, setGlarePos] = useState({ x: 50, y: 50 });
+  const [failedCards, setFailedCards] = useState<Record<string, boolean>>({});
+  const [cdnCards, setCdnCards] = useState<Record<string, boolean>>({});
+
+  const cardKey = card.id;
+  const isCdnActive = Boolean(cdnCards[cardKey]);
+  const isFailed = Boolean(failedCards[cardKey]);
+
+  const activeSrc = isCdnActive
+    ? resolveCardCdnUrl(card)
+    : card.imageUrl || resolveCardImageUrl(card);
+
+  const handleImageError = () => {
+    if (!isCdnActive) {
+      const cdn = resolveCardCdnUrl(card);
+      if (cdn && cdn !== activeSrc) {
+        setCdnCards((prev) => ({ ...prev, [cardKey]: true }));
+        return;
+      }
+    }
+    setFailedCards((prev) => ({ ...prev, [cardKey]: true }));
+  };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!interactive) return;
@@ -111,6 +133,8 @@ export const PokemonCardView: React.FC<PokemonCardViewProps> = ({
       ? 'border-[#94a3b8] bg-[#cbd5e1]' // Japanese Silver border
       : 'border-[#94a3b8] bg-[#cbd5e1]'; // SV Modern Silver border
 
+  const hasValidImage = Boolean(activeSrc) && !isFailed;
+
   return (
     <div
       onClick={onClick}
@@ -118,24 +142,29 @@ export const PokemonCardView: React.FC<PokemonCardViewProps> = ({
       onMouseLeave={handleMouseLeave}
       style={{
         transform: interactive
-          ? `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1, 1, 1)`
+          ? `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`
           : undefined,
         transition: rotateX === 0 && rotateY === 0 ? 'transform 0.4s ease-out' : 'none',
       }}
-      className={`group relative ${sizeClasses} rounded-2xl overflow-hidden border-4 p-1.5 flex flex-col justify-between shadow-2xl select-none transition-shadow ${borderClass}`}
+      className={`group relative ${sizeClasses} rounded-2xl overflow-hidden shadow-2xl select-none transition-all ${
+        hasValidImage
+          ? 'p-0 ring-1 ring-black/50 bg-zinc-950'
+          : `border-4 p-1.5 ${borderClass}`
+      }`}
     >
       {/* Background Foil Shimmer Overlay */}
-      {card.foilPattern === 'rainbow_shimmer' && <div className="absolute inset-0 foil-rainbow-shimmer z-20 pointer-events-none" />}
-      {card.foilPattern === 'textured_gold' && <div className="absolute inset-0 foil-gold-glitter z-20 pointer-events-none" />}
-      {card.foilPattern === 'holo_sheen' && <div className="absolute inset-0 foil-holo-sheen z-20 pointer-events-none" />}
-      {card.foilPattern === 'cosmos_stars' && <div className="absolute inset-0 foil-holo-sheen opacity-60 z-20 pointer-events-none" />}
+      {card.foilPattern === 'rainbow_shimmer' && <div className="absolute inset-0 foil-rainbow-shimmer z-20 pointer-events-none rounded-2xl" />}
+      {card.foilPattern === 'textured_gold' && <div className="absolute inset-0 foil-gold-glitter z-20 pointer-events-none rounded-2xl" />}
+      {card.foilPattern === 'holo_sheen' && <div className="absolute inset-0 foil-holo-sheen z-20 pointer-events-none rounded-2xl" />}
+      {card.foilPattern === 'cosmos_stars' && <div className="absolute inset-0 foil-holo-sheen opacity-60 z-20 pointer-events-none rounded-2xl" />}
 
       {/* Dynamic Cursor Glare */}
       {interactive && (
         <div
-          className="absolute inset-0 pointer-events-none z-30 transition-opacity duration-300 opacity-0 group-hover:opacity-100"
+          className="absolute inset-0 pointer-events-none z-30 transition-opacity duration-300 opacity-0 group-hover:opacity-100 rounded-2xl"
           style={{
             background: `radial-gradient(circle at ${glarePos.x}% ${glarePos.y}%, rgba(255, 255, 255, 0.45) 0%, transparent 60%)`,
+            mixBlendMode: 'overlay',
           }}
         />
       )}
@@ -150,10 +179,23 @@ export const PokemonCardView: React.FC<PokemonCardViewProps> = ({
         </div>
       )}
 
-      {/* ========================================================= */}
-      {/* INNER CARD BODY CONTAINER */}
-      {/* ========================================================= */}
-      <div className="relative z-10 w-full h-full rounded-xl bg-zinc-950 overflow-hidden flex flex-col justify-between border border-black/40 text-zinc-100">
+      {/* Authentic Scanned High-Res Card Image */}
+      {hasValidImage ? (
+        <div className="relative w-full h-full rounded-2xl overflow-hidden flex items-center justify-center bg-zinc-950">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={activeSrc}
+            alt={card.name}
+            onError={handleImageError}
+            className="w-full h-full object-fill rounded-2xl filter drop-shadow-md select-none"
+            loading="lazy"
+          />
+        </div>
+      ) : (
+        /* ========================================================= */
+        /* VECTOR FALLBACK: INNER CARD BODY CONTAINER */
+        /* ========================================================= */
+        <div className="relative z-10 w-full h-full rounded-xl bg-zinc-950 overflow-hidden flex flex-col justify-between border border-black/40 text-zinc-100">
         
         {/* ========================================================= */}
         {/* 1. CARD HEADER: Stage, Name, HP, Energy Type */}
@@ -281,6 +323,7 @@ export const PokemonCardView: React.FC<PokemonCardViewProps> = ({
         </div>
 
       </div>
+      )}
 
       {/* Duplicate Count Badge */}
       {showDuplicateBadge && count > 1 && (

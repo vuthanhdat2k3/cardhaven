@@ -25,12 +25,15 @@ export const SealedBoxProduct: React.FC<SealedBoxProductProps> = ({
   const isBoosterBox = product.productType === 'booster_box';
   const isTin = product.productType === 'collector_tin';
   const isBundle = product.productType === 'bundle';
+  const [imgError, setImgError] = React.useState(false);
 
   const sizeClasses = {
-    sm: 'w-40 h-[180px] text-[10px]',
-    md: 'w-56 h-[240px] text-xs',
-    lg: 'w-72 h-[300px] text-sm',
+    sm: 'w-40 h-[190px] text-[10px]',
+    md: 'w-56 h-[250px] text-xs',
+    lg: 'w-72 h-[310px] text-sm',
   }[size];
+
+  const hasValidImage = Boolean(product.boxImageUrl) && !imgError;
 
   return (
     <div
@@ -50,21 +53,21 @@ export const SealedBoxProduct: React.FC<SealedBoxProductProps> = ({
       {/* ========================================================= */}
       {/* FACTORY SHRINK WRAP WITH POKÉBALL WATERMARK STAMPS */}
       {/* ========================================================= */}
-      {isBoosterBox && (
-        <div className="absolute inset-0 pointer-events-none z-20 overflow-hidden opacity-30">
+      {(isBoosterBox || isETB) && (
+        <div className="absolute inset-0 pointer-events-none z-20 overflow-hidden opacity-35">
           <div className="absolute top-2 left-3 flex items-center space-x-1 text-[8px] font-mono text-white/70">
             <span>⚪</span>
             <span>POKÉMON</span>
           </div>
-          <div className="absolute top-14 right-4 flex items-center space-x-1 text-[8px] font-mono text-white/70">
+          <div className="absolute top-16 right-4 flex items-center space-x-1 text-[8px] font-mono text-white/70">
             <span>⚪</span>
             <span>POKÉMON</span>
           </div>
-          <div className="absolute bottom-6 left-6 flex items-center space-x-1 text-[8px] font-mono text-white/70">
+          <div className="absolute bottom-10 left-6 flex items-center space-x-1 text-[8px] font-mono text-white/70">
             <span>⚪</span>
             <span>POKÉMON</span>
           </div>
-          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/15 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent" />
         </div>
       )}
 
@@ -89,15 +92,38 @@ export const SealedBoxProduct: React.FC<SealedBoxProductProps> = ({
       </div>
 
       {/* ========================================================= */}
-      {/* BOX CENTER BODY & MASCOT */}
+      {/* BOX CENTER BODY: AUTHENTIC SCAN OR VECTOR FALLBACK */}
       {/* ========================================================= */}
-      <div className="relative z-10 flex-1 p-3 flex flex-col items-center justify-center text-center">
-        
-        {/* Glow */}
-        <div
-          className="absolute h-24 w-24 rounded-full blur-xl pointer-events-none opacity-40"
-          style={{ background: product.accentColor }}
-        />
+      <div className="relative z-10 flex-1 p-2 flex flex-col items-center justify-center text-center overflow-hidden">
+        {hasValidImage ? (
+          <div className="relative w-full h-full flex flex-col items-center justify-center">
+            {/* Real Authentic Box Shot */}
+            <div className="relative w-full flex-1 flex items-center justify-center my-0.5 overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={product.boxImageUrl}
+                alt={product.name}
+                onError={() => setImgError(true)}
+                className="max-h-[140px] max-w-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.8)] transform group-hover:scale-105 transition duration-300"
+                loading="lazy"
+              />
+            </div>
+
+            {/* Box Name Tag */}
+            <h3 className="font-black text-xs text-white line-clamp-1 leading-snug drop-shadow-md">
+              {product.name}
+            </h3>
+            <p className="text-[9px] text-zinc-400 font-medium line-clamp-1">
+              {setInfo?.name} • {product.contents.boosterPacksCount} Packs
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Glow */}
+            <div
+              className="absolute h-24 w-24 rounded-full blur-xl pointer-events-none opacity-40"
+              style={{ background: product.accentColor }}
+            />
 
         {/* Collection-Specific Mascot & Centerpiece */}
         <div className="relative my-1">
@@ -180,6 +206,8 @@ export const SealedBoxProduct: React.FC<SealedBoxProductProps> = ({
           <div className="mt-2 rounded-md bg-zinc-800/80 border border-zinc-700 px-2 py-0.5 text-[9px] font-bold text-zinc-300">
             ★ {product.contents.boosterPacksCount} Packs Lẻ Bên Trong
           </div>
+        )}
+          </>
         )}
       </div>
 
