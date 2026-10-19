@@ -60,7 +60,7 @@ export const POKEMON_SETS: PokemonSet[] = [
     name: '30th Celebration (Mega Evolution)',
     series: 'Mega Evolution Series',
     releaseYear: 2026,
-    totalCards: 50,
+    totalCards: 78,
     language: 'EN',
     badgeColor: 'from-amber-400 via-yellow-500 to-amber-700',
     description: 'The monumental 30th Anniversary milestone expansion featuring the return of Mega Evolution, all-foil packs, guaranteed Pikachu 30th Rare, and legendary Mega EX.',

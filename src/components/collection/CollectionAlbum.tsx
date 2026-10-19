@@ -22,9 +22,13 @@ export const CollectionAlbum: React.FC = () => {
   const [ownershipFilter, setOwnershipFilter] = useState<'ALL' | 'OWNED' | 'MISSING'>('ALL');
   const [inspectedCard, setInspectedCard] = useState<CardPrinting | null>(null);
 
-  // Filtered Cards
+  // Filtered Cards with strict unique card ID deduplication
   const displayedCards = useMemo(() => {
+    const seen = new Set<string>();
     return CARD_PRINTINGS.filter((card) => {
+      if (seen.has(card.id)) return false;
+      seen.add(card.id);
+
       const count = getCardCount(card.id);
       const isOwned = count > 0;
 
@@ -46,10 +50,18 @@ export const CollectionAlbum: React.FC = () => {
     });
   }, [searchQuery, selectedSet, selectedRarity, ownershipFilter, getCardCount]);
 
-  // Overall Statistics
-  const totalUniqueOwned = CARD_PRINTINGS.filter((c) => getCardCount(c.id) > 0).length;
+  // Overall Statistics with unique card printings
+  const uniquePrintings = useMemo(() => {
+    const map = new Map<string, CardPrinting>();
+    for (const c of CARD_PRINTINGS) {
+      if (!map.has(c.id)) map.set(c.id, c);
+    }
+    return Array.from(map.values());
+  }, []);
+
+  const totalUniqueOwned = uniquePrintings.filter((c) => getCardCount(c.id) > 0).length;
   const totalCardEntries = collection.reduce((sum, entry) => sum + entry.count, 0);
-  const totalPortfolioValue = CARD_PRINTINGS.reduce((sum, c) => {
+  const totalPortfolioValue = uniquePrintings.reduce((sum, c) => {
     const count = getCardCount(c.id);
     return sum + (count > 0 ? c.estimatedValue * count : 0);
   }, 0);

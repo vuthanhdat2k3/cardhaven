@@ -189,6 +189,22 @@ export const PokemonCardView: React.FC<PokemonCardViewProps> = ({
         </div>
       )}
 
+      {/* 30th Celebration RGB Mew (YOSHIROTTEN) Futuristic Rare Badge */}
+      {card.setId === 'meg-30th-en' && card.id.includes('rgb') && (
+        <div className="absolute top-2 right-2 pointer-events-none z-20">
+          <span className={`rounded-full px-2 py-0.5 text-[8px] font-black uppercase tracking-wider shadow-lg border flex items-center space-x-1 ${
+            card.id.includes('rgb-r')
+              ? 'bg-rose-600/90 text-white border-rose-300'
+              : card.id.includes('rgb-g')
+              ? 'bg-emerald-600/90 text-white border-emerald-300'
+              : 'bg-blue-600/90 text-white border-blue-300'
+          }`}>
+            <span>{card.id.includes('rgb-r') ? '🔴' : card.id.includes('rgb-g') ? '🟢' : '🔵'}</span>
+            <span>{card.setNumber}</span>
+          </span>
+        </div>
+      )}
+
       {/* Authentic Pokémon TCG Live Code Card */}
       {card.name.includes('Code Card') || card.id.includes('code') ? (
         <div className="relative w-full h-full rounded-2xl bg-gradient-to-br from-zinc-950 via-emerald-950/70 to-zinc-950 border-2 border-emerald-500/50 p-3 flex flex-col justify-between text-white shadow-2xl">
