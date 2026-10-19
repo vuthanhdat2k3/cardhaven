@@ -13,6 +13,59 @@ import {
   X,
 } from 'lucide-react';
 
+const SET_SUBSETS_CONFIG: Record<string, { id: string; label: string }[]> = {
+  'sv-151-en': [
+    { id: 'ALL', label: 'Tất cả (207)' },
+    { id: 'MAIN', label: 'Main Set #001-165 (165)' },
+    { id: 'SECRET', label: 'Secret Rares #166-207 (42)' },
+    { id: 'AR', label: 'Illustration Rare (16)' },
+    { id: 'FA', label: 'Full Art ex & Trainers (16)' },
+    { id: 'SAR', label: 'Special Illustration (7)' },
+    { id: 'GOLD', label: 'Gold Hyper Rare (3)' },
+  ],
+  'sv-pre-en': [
+    { id: 'ALL', label: 'Tất cả (180)' },
+    { id: 'MAIN', label: 'Main Set #001-131 (131)' },
+    { id: 'SECRET', label: 'Secret Rares #132-180 (49)' },
+    { id: 'SIR', label: 'Eeveelutions SIR (10)' },
+    { id: 'GOLD', label: 'Gold Hyper Rare (10)' },
+  ],
+  'sv-151-jp': [
+    { id: 'ALL', label: 'Tất cả (210)' },
+    { id: 'MAIN', label: 'Main Set #001-165 (165)' },
+    { id: 'AR', label: 'AR Illustration Rare (18)' },
+    { id: 'SR', label: 'SR Super Rare (18)' },
+    { id: 'SAR', label: 'SAR Special Art Rare (6)' },
+    { id: 'UR', label: 'UR Gold (3)' },
+  ],
+  'swsh-crz-en': [
+    { id: 'ALL', label: 'Tất cả (230)' },
+    { id: 'MAIN', label: 'Main Set #001-160 (160)' },
+    { id: 'GG', label: 'Galarian Gallery (70)' },
+    { id: 'GG_HOLO', label: 'GG Holo Art (34)' },
+    { id: 'GG_V', label: 'GG V & VSTAR (21)' },
+    { id: 'GG_SUPP', label: 'GG Trainers (11)' },
+    { id: 'GOLD', label: 'Gold God Quartet (4)' },
+  ],
+  'pocket-a1-en': [
+    { id: 'ALL', label: 'Tất cả (286)' },
+    { id: 'MAIN', label: 'Base Apex #001-226 (226)' },
+    { id: 'AR', label: '1-Star AR Rares (44)' },
+    { id: 'SR', label: '2-Star Super Rares (9)' },
+    { id: 'IMMERSIVE', label: '3-Star Immersive (4)' },
+    { id: 'CROWN', label: '👑 Crown Gold (3)' },
+  ],
+  'meg-30th-en': [
+    { id: 'ALL', label: 'Tất cả (199)' },
+    { id: 'MAIN', label: 'Main Set #001-128 (128)' },
+    { id: 'PIKACHU', label: '⚡ 30 Pikachu (30)' },
+    { id: 'SECRET', label: 'Secret Rares #129-158 (30)' },
+    { id: 'RGB', label: '🔴🟢🔵 RGB Mew (3)' },
+    { id: 'CLASSIC', label: 'Classic Collection (30)' },
+    { id: 'ENERGY', label: 'Foil Energy (8)' },
+  ],
+};
+
 export const CollectionAlbum: React.FC = () => {
   const { collection, getCardCount, getSetCompletion } = useGame();
 
@@ -20,7 +73,7 @@ export const CollectionAlbum: React.FC = () => {
   const [selectedSet, setSelectedSet] = useState<string>('ALL');
   const [selectedRarity, setSelectedRarity] = useState<string>('ALL');
   const [ownershipFilter, setOwnershipFilter] = useState<'ALL' | 'OWNED' | 'MISSING'>('ALL');
-  const [selected30thSubset, setSelected30thSubset] = useState<'ALL' | 'MAIN' | 'PIKACHU' | 'SECRET' | 'RGB' | 'CLASSIC' | 'ENERGY'>('ALL');
+  const [selectedSubset, setSelectedSubset] = useState<string>('ALL');
   const [inspectedCard, setInspectedCard] = useState<CardPrinting | null>(null);
 
   // Filtered Cards with strict unique card ID deduplication
@@ -39,21 +92,49 @@ export const CollectionAlbum: React.FC = () => {
       if (selectedSet !== 'ALL' && card.setId !== selectedSet) return false;
       if (selectedRarity !== 'ALL' && card.rarity !== selectedRarity) return false;
 
-      // 30th Celebration Master Set Subsets Filtering
-      if (selectedSet === 'meg-30th-en' && selected30thSubset !== 'ALL') {
-        const num = parseInt(card.setNumber, 10);
-        if (selected30thSubset === 'MAIN') {
-          if (!(/^\d{3}$/.test(card.setNumber) && num >= 1 && num <= 128)) return false;
-        } else if (selected30thSubset === 'PIKACHU') {
-          if (!card.name.toLowerCase().includes('pikachu') && !card.id.includes('pika')) return false;
-        } else if (selected30thSubset === 'SECRET') {
-          if (!(/^\d{3}$/.test(card.setNumber) && num >= 129 && num <= 158)) return false;
-        } else if (selected30thSubset === 'RGB') {
-          if (!card.setNumber.includes('RGB')) return false;
-        } else if (selected30thSubset === 'CLASSIC') {
-          if (!card.setNumber.startsWith('C')) return false;
-        } else if (selected30thSubset === 'ENERGY') {
-          if (!card.setNumber.startsWith('E')) return false;
+      // Master Set Subsets Filtering across all sets
+      if (selectedSet !== 'ALL' && selectedSubset !== 'ALL') {
+        const num = parseInt(card.setNumber.replace(/\D/g, ''), 10);
+        const isGG = card.setNumber.startsWith('GG');
+
+        if (selectedSet === 'meg-30th-en') {
+          if (selectedSubset === 'MAIN' && !(/^\d{3}$/.test(card.setNumber) && num >= 1 && num <= 128)) return false;
+          if (selectedSubset === 'PIKACHU' && !card.name.toLowerCase().includes('pikachu') && !card.id.includes('pika')) return false;
+          if (selectedSubset === 'SECRET' && !(/^\d{3}$/.test(card.setNumber) && num >= 129 && num <= 158)) return false;
+          if (selectedSubset === 'RGB' && !card.setNumber.includes('RGB')) return false;
+          if (selectedSubset === 'CLASSIC' && !card.setNumber.startsWith('C')) return false;
+          if (selectedSubset === 'ENERGY' && !card.setNumber.startsWith('E')) return false;
+        } else if (selectedSet === 'sv-151-en') {
+          if (selectedSubset === 'MAIN' && num > 165) return false;
+          if (selectedSubset === 'SECRET' && num <= 165) return false;
+          if (selectedSubset === 'AR' && (num < 166 || num > 181)) return false;
+          if (selectedSubset === 'FA' && (num < 182 || num > 197)) return false;
+          if (selectedSubset === 'SAR' && (num < 198 || num > 204)) return false;
+          if (selectedSubset === 'GOLD' && (num < 205 || num > 207)) return false;
+        } else if (selectedSet === 'sv-pre-en') {
+          if (selectedSubset === 'MAIN' && num > 131) return false;
+          if (selectedSubset === 'SECRET' && num <= 131) return false;
+          if (selectedSubset === 'SIR' && (num < 151 || num > 160)) return false;
+          if (selectedSubset === 'GOLD' && num < 171) return false;
+        } else if (selectedSet === 'sv-151-jp') {
+          if (selectedSubset === 'MAIN' && num > 165) return false;
+          if (selectedSubset === 'AR' && (num < 166 || num > 183)) return false;
+          if (selectedSubset === 'SR' && (num < 184 || num > 201)) return false;
+          if (selectedSubset === 'SAR' && (num < 202 || num > 207)) return false;
+          if (selectedSubset === 'UR' && num < 208) return false;
+        } else if (selectedSet === 'swsh-crz-en') {
+          if (selectedSubset === 'MAIN' && isGG) return false;
+          if (selectedSubset === 'GG' && !isGG) return false;
+          if (selectedSubset === 'GG_HOLO' && (!isGG || num > 34)) return false;
+          if (selectedSubset === 'GG_V' && (!isGG || num < 35 || num > 55)) return false;
+          if (selectedSubset === 'GG_SUPP' && (!isGG || num < 56 || num > 66)) return false;
+          if (selectedSubset === 'GOLD' && (!isGG || num < 67 || num > 70)) return false;
+        } else if (selectedSet === 'pocket-a1-en') {
+          if (selectedSubset === 'MAIN' && num > 226) return false;
+          if (selectedSubset === 'AR' && (num < 227 || num > 270)) return false;
+          if (selectedSubset === 'SR' && (num < 271 || num > 279)) return false;
+          if (selectedSubset === 'IMMERSIVE' && (num < 280 || num > 283)) return false;
+          if (selectedSubset === 'CROWN' && num < 284) return false;
         }
       }
 
@@ -67,7 +148,7 @@ export const CollectionAlbum: React.FC = () => {
 
       return true;
     });
-  }, [searchQuery, selectedSet, selectedRarity, ownershipFilter, selected30thSubset, getCardCount]);
+  }, [searchQuery, selectedSet, selectedRarity, ownershipFilter, selectedSubset, getCardCount]);
 
   // Overall Statistics with unique card printings
   const uniquePrintings = useMemo(() => {
@@ -134,7 +215,10 @@ export const CollectionAlbum: React.FC = () => {
               return (
                 <div
                   key={set.id}
-                  onClick={() => setSelectedSet(set.id)}
+                  onClick={() => {
+                    setSelectedSet(set.id);
+                    setSelectedSubset('ALL');
+                  }}
                   className={`cursor-pointer rounded-xl border p-3 transition ${
                     selectedSet === set.id
                       ? 'border-amber-500 bg-amber-500/10'
@@ -180,7 +264,10 @@ export const CollectionAlbum: React.FC = () => {
         <div>
           <select
             value={selectedSet}
-            onChange={(e) => setSelectedSet(e.target.value)}
+            onChange={(e) => {
+              setSelectedSet(e.target.value);
+              setSelectedSubset('ALL');
+            }}
             className="w-full rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2.5 text-xs text-zinc-300 focus:border-amber-500 focus:outline-none"
           >
             <option value="ALL">Tất cả Set Thẻ</option>
@@ -239,28 +326,18 @@ export const CollectionAlbum: React.FC = () => {
         </div>
       </div>
 
-      {/* 30th Celebration Master Set Subsets Filter Row */}
-      {selectedSet === 'meg-30th-en' && (
+      {/* Dynamic Master Set Subsets Filter Row */}
+      {selectedSet !== 'ALL' && SET_SUBSETS_CONFIG[selectedSet] && (
         <div className="flex flex-wrap items-center gap-2 p-2.5 rounded-2xl border border-amber-500/30 bg-amber-500/5 shadow-md">
           <span className="text-[11px] font-black uppercase tracking-wider text-amber-400 pl-2 mr-1">
-            Nhóm thẻ Master Set (199):
+            Nhóm thẻ ({POKEMON_SETS.find((s) => s.id === selectedSet)?.name}):
           </span>
-          {(
-            [
-              { id: 'ALL', label: 'Tất cả (199)' },
-              { id: 'MAIN', label: 'Main Set #001-128 (128)' },
-              { id: 'PIKACHU', label: '⚡ 30 Pikachu (30)' },
-              { id: 'SECRET', label: 'Secret Rares #129-158 (30)' },
-              { id: 'RGB', label: '🔴🟢🔵 RGB Mew (3)' },
-              { id: 'CLASSIC', label: 'Classic Collection (30)' },
-              { id: 'ENERGY', label: 'Foil Energy (8)' },
-            ] as const
-          ).map((sub) => (
+          {SET_SUBSETS_CONFIG[selectedSet].map((sub) => (
             <button
               key={sub.id}
-              onClick={() => setSelected30thSubset(sub.id)}
+              onClick={() => setSelectedSubset(sub.id)}
               className={`rounded-xl px-3 py-1.5 text-xs font-bold transition ${
-                selected30thSubset === sub.id
+                selectedSubset === sub.id
                   ? 'bg-amber-500 text-black shadow-md'
                   : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700'
               }`}
