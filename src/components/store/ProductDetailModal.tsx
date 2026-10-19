@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import { Product } from '@/types';
 import { POKEMON_SETS } from '@/data/sets';
 import { useGame } from '@/lib/store/game-context';
+import { BoosterPackFoil } from '@/components/ui/BoosterPackFoil';
+import { SealedBoxProduct } from '@/components/ui/SealedBoxProduct';
 import { X, ShoppingBag, Plus, Minus, Package, Star, AlertCircle, Sparkles } from 'lucide-react';
 
 interface ProductDetailModalProps {
@@ -69,20 +71,18 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           
           {/* Left: Product Visual Box */}
           <div
-            className="flex flex-col items-center justify-center rounded-2xl border border-white/10 p-8 shadow-inner"
+            className="flex flex-col items-center justify-center rounded-2xl border border-white/10 p-6 shadow-inner"
             style={{
               background: `radial-gradient(circle, ${product.accentColor}33 0%, #09090b 80%)`,
             }}
           >
-            <span className="text-8xl drop-shadow-[0_15px_25px_rgba(0,0,0,0.9)]">
-              {product.productType === 'booster_box'
-                ? '📦'
-                : product.productType === 'elite_trainer_box'
-                ? '🎁'
-                : product.productType === 'collector_tin'
-                ? '🛡️'
-                : '🎴'}
-            </span>
+            <div className="flex items-center justify-center py-2">
+              {product.productType === 'booster_pack' ? (
+                <BoosterPackFoil product={product} size="lg" interactive={false} />
+              ) : (
+                <SealedBoxProduct product={product} size="md" interactive={false} />
+              )}
+            </div>
             <div className="mt-4 flex items-center space-x-2">
               <span className="rounded-md bg-amber-500/20 px-2 py-0.5 text-xs font-bold text-amber-300 border border-amber-500/40">
                 {product.language === 'JP' ? 'Japanese Edition' : 'English Edition'}

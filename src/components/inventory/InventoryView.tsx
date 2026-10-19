@@ -4,6 +4,8 @@ import React from 'react';
 import { useGame } from '@/lib/store/game-context';
 import { PRODUCTS_MAP } from '@/data/products';
 import { POKEMON_SETS } from '@/data/sets';
+import { BoosterPackFoil } from '@/components/ui/BoosterPackFoil';
+import { SealedBoxProduct } from '@/components/ui/SealedBoxProduct';
 import { Package, Sparkles, Box, ShoppingBag, ShieldCheck } from 'lucide-react';
 
 interface InventoryViewProps {
@@ -100,22 +102,13 @@ export const InventoryView: React.FC<InventoryViewProps> = ({ onGoToStore, onOpe
                   </div>
                 </div>
 
-                {/* Visual Icon */}
-                <div
-                  className="my-4 flex h-36 w-full items-center justify-center rounded-xl border border-white/5 shadow-inner"
-                  style={{
-                    background: `radial-gradient(circle, ${product.accentColor}33 0%, #0d0f12 85%)`,
-                  }}
-                >
-                  <span className="text-6xl transform transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_10px_15px_rgba(0,0,0,0.8)]">
-                    {product.productType === 'booster_box'
-                      ? '📦'
-                      : product.productType === 'elite_trainer_box'
-                      ? '🎁'
-                      : product.productType === 'collector_tin'
-                      ? '🛡️'
-                      : '🎴'}
-                  </span>
+                {/* Authentic Physical Product Display */}
+                <div className="my-3 flex h-52 w-full items-center justify-center rounded-xl p-1">
+                  {product.productType === 'booster_pack' ? (
+                    <BoosterPackFoil product={product} size="sm" interactive={false} />
+                  ) : (
+                    <SealedBoxProduct product={product} size="sm" interactive={false} />
+                  )}
                 </div>
 
                 {/* Details */}

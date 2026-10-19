@@ -3,6 +3,8 @@
 import React from 'react';
 import { Product } from '@/types';
 import { Eye, Flame, Shield, Award } from 'lucide-react';
+import { BoosterPackFoil } from '@/components/ui/BoosterPackFoil';
+import { SealedBoxProduct } from '@/components/ui/SealedBoxProduct';
 
 interface HobbyShopSceneProps {
   products: Product[];
@@ -69,17 +71,16 @@ export const HobbyShopScene: React.FC<HobbyShopSceneProps> = ({
                     <span className="text-xs font-bold text-amber-400">★ {product.rating.toFixed(1)}</span>
                   </div>
 
-                  {/* 3D Box Mockup */}
+                  {/* Authentic Physical Product Display */}
                   <div
                     onClick={() => onInspectProduct(product)}
-                    className="relative my-3 flex h-36 w-full cursor-pointer items-center justify-center rounded-lg border border-white/10 bg-black/40 group-hover:border-amber-400/40 transition"
+                    className="relative my-3 flex h-48 w-full cursor-pointer items-center justify-center rounded-lg p-1 group-hover:scale-105 transition duration-300"
                   >
-                    <span className="text-5xl transform transition-transform duration-300 group-hover:scale-115 drop-shadow-[0_15px_15px_rgba(0,0,0,0.9)]">
-                      {product.productType === 'elite_trainer_box' ? '🎁' : product.productType === 'booster_box' ? '📦' : '🛡️'}
-                    </span>
-                    <div className="absolute bottom-2 left-2 rounded bg-black/80 px-2 py-0.5 text-[10px] font-bold text-zinc-300">
-                      {product.contents.boosterPacksCount} Packs
-                    </div>
+                    {product.productType === 'booster_pack' ? (
+                      <BoosterPackFoil product={product} size="sm" interactive={false} />
+                    ) : (
+                      <SealedBoxProduct product={product} size="sm" interactive={false} />
+                    )}
                   </div>
 
                   {/* Title & Price */}
@@ -146,10 +147,8 @@ export const HobbyShopScene: React.FC<HobbyShopSceneProps> = ({
                     <span className="text-zinc-400 font-mono">Stock: {product.stock}</span>
                   </div>
 
-                  <div className="my-3 flex h-28 items-center justify-center rounded-lg bg-black/50">
-                    <span className="text-4xl transform transition-transform group-hover:scale-110">
-                      {product.productType === 'booster_box' ? '📦' : '🎁'}
-                    </span>
+                  <div className="my-2 flex h-44 items-center justify-center p-1">
+                    <SealedBoxProduct product={product} size="sm" interactive={false} />
                   </div>
 
                   <div>
@@ -200,10 +199,8 @@ export const HobbyShopScene: React.FC<HobbyShopSceneProps> = ({
                     <span className="font-bold text-zinc-400">{product.language}</span>
                   </div>
 
-                  <div className="my-2 flex h-24 items-center justify-center rounded-lg bg-gradient-to-b from-zinc-900 to-black">
-                    <span className="text-4xl transform transition-transform group-hover:scale-120 drop-shadow-[0_10px_10px_rgba(0,0,0,0.8)]">
-                      🎴
-                    </span>
+                  <div className="my-2 flex h-52 items-center justify-center p-1">
+                    <BoosterPackFoil product={product} size="sm" interactive={false} />
                   </div>
 
                   <div>

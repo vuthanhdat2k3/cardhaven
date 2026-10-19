@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { CardPrinting, Rarity } from '@/types';
+import { EnergyIcon } from './EnergyIcon';
 import { Lock } from 'lucide-react';
 
 interface PokemonCardViewProps {
@@ -14,23 +15,15 @@ interface PokemonCardViewProps {
   showDuplicateBadge?: boolean;
 }
 
-const RARITY_LABELS: Record<Rarity, { label: string; color: string; border: string }> = {
-  common: { label: 'Common', color: 'text-zinc-400', border: 'border-zinc-700' },
-  uncommon: { label: 'Uncommon', color: 'text-emerald-400', border: 'border-emerald-600/50' },
-  rare: { label: 'Rare', color: 'text-blue-400', border: 'border-blue-500/50' },
-  holo_rare: { label: 'Holo Rare', color: 'text-purple-400', border: 'border-purple-500' },
-  double_rare: { label: 'Double Rare (ex)', color: 'text-rose-400', border: 'border-rose-500 shadow-rose-500/20' },
-  ultra_rare: { label: 'Ultra Rare (Full Art)', color: 'text-amber-300', border: 'border-amber-400 shadow-amber-500/30' },
-  special_illustration_rare: {
-    label: 'Special Illustration Rare',
-    color: 'text-fuchsia-300',
-    border: 'border-fuchsia-400 shadow-fuchsia-500/40',
-  },
-  hyper_rare: {
-    label: 'Hyper Rare (Gold Secret)',
-    color: 'text-yellow-300 font-extrabold',
-    border: 'border-yellow-300 shadow-yellow-500/50',
-  },
+const RARITY_SYMBOLS: Record<Rarity, { symbol: string; color: string; label: string }> = {
+  common: { symbol: '●', color: 'text-zinc-400', label: 'Common' },
+  uncommon: { symbol: '◆', color: 'text-zinc-300', label: 'Uncommon' },
+  rare: { symbol: '★', color: 'text-zinc-200', label: 'Rare' },
+  holo_rare: { symbol: '★H', color: 'text-purple-400 font-bold', label: 'Holo Rare' },
+  double_rare: { symbol: '★★', color: 'text-rose-400 font-bold', label: 'Double Rare (ex)' },
+  ultra_rare: { symbol: '★★★', color: 'text-amber-300 font-bold', label: 'Ultra Rare' },
+  special_illustration_rare: { symbol: '★★★ SIR', color: 'text-fuchsia-300 font-extrabold', label: 'Special Illustration Rare' },
+  hyper_rare: { symbol: '★★★ HR', color: 'text-yellow-300 font-extrabold', label: 'Hyper Rare (Gold)' },
 };
 
 export const PokemonCardView: React.FC<PokemonCardViewProps> = ({
@@ -71,27 +64,34 @@ export const PokemonCardView: React.FC<PokemonCardViewProps> = ({
     setRotateY(0);
   };
 
-  const rarityMeta = RARITY_LABELS[card.rarity] || RARITY_LABELS.common;
+  const isFullArt =
+    card.rarity === 'special_illustration_rare' ||
+    card.rarity === 'hyper_rare' ||
+    card.rarity === 'ultra_rare';
 
-  // Sizing styles
+  const isCrownZenith = card.setId.includes('crz');
+  const isJP = card.language === 'JP';
+  const rarityMeta = RARITY_SYMBOLS[card.rarity] || RARITY_SYMBOLS.common;
+
+  // Exact card proportions: 63mm x 88mm (~1 : 1.4)
   const sizeClasses = {
-    sm: 'w-36 h-52 text-[10px]',
-    md: 'w-48 h-68 text-xs',
-    lg: 'w-64 h-90 text-sm',
-    xl: 'w-80 h-112 text-base',
+    sm: 'w-36 h-[200px] text-[9px]',
+    md: 'w-48 h-[270px] text-[11px]',
+    lg: 'w-64 h-[360px] text-xs',
+    xl: 'w-76 h-[426px] text-sm',
   }[size];
 
   if (!isOwned) {
     return (
       <div
         onClick={onClick}
-        className={`relative ${sizeClasses} rounded-xl border border-zinc-800 bg-zinc-950/80 p-3 flex flex-col items-center justify-center text-center shadow-md cursor-pointer transition hover:border-zinc-700`}
+        className={`relative ${sizeClasses} rounded-2xl border-2 border-zinc-800 bg-zinc-950/90 p-4 flex flex-col items-center justify-center text-center shadow-md select-none cursor-pointer transition hover:border-zinc-700`}
       >
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-900 border border-zinc-800 text-zinc-600 mb-2">
           <Lock className="h-6 w-6" />
         </div>
-        <p className="font-mono text-[11px] font-bold text-zinc-500">#{card.setNumber}</p>
-        <p className="font-semibold text-zinc-600 line-clamp-1">{card.name}</p>
+        <p className="font-mono text-xs font-bold text-zinc-500">#{card.setNumber}</p>
+        <p className="font-bold text-zinc-500 line-clamp-1">{card.name}</p>
         <span className={`mt-1 text-[10px] font-medium ${rarityMeta.color}`}>
           {rarityMeta.label}
         </span>
@@ -99,10 +99,17 @@ export const PokemonCardView: React.FC<PokemonCardViewProps> = ({
     );
   }
 
-  const isFullArt =
-    card.rarity === 'special_illustration_rare' ||
-    card.rarity === 'hyper_rare' ||
-    card.rarity === 'ultra_rare';
+  // Border Style based on expansion series
+  const borderClass =
+    card.rarity === 'hyper_rare'
+      ? 'border-[#eab308] bg-gradient-to-b from-[#ca8a04] via-[#a16207] to-[#713f12]'
+      : isFullArt
+      ? 'border-indigo-400/80 bg-gradient-to-b from-indigo-950 via-slate-900 to-purple-950'
+      : isCrownZenith
+      ? 'border-[#eab308] bg-[#fef08a]' // Classic Yellow border for SWSH
+      : isJP
+      ? 'border-[#94a3b8] bg-[#cbd5e1]' // Japanese Silver border
+      : 'border-[#94a3b8] bg-[#cbd5e1]'; // SV Modern Silver border
 
   return (
     <div
@@ -115,113 +122,169 @@ export const PokemonCardView: React.FC<PokemonCardViewProps> = ({
           : undefined,
         transition: rotateX === 0 && rotateY === 0 ? 'transform 0.4s ease-out' : 'none',
       }}
-      className={`group relative ${sizeClasses} rounded-xl overflow-hidden border-2 cursor-pointer shadow-xl select-none transition-shadow ${
-        rarityMeta.border
-      } ${
-        card.rarity === 'hyper_rare'
-          ? 'bg-gradient-to-b from-yellow-700 via-amber-900 to-yellow-950'
-          : card.rarity === 'special_illustration_rare'
-          ? 'bg-gradient-to-b from-indigo-950 via-slate-900 to-purple-950'
-          : 'bg-zinc-900'
-      }`}
+      className={`group relative ${sizeClasses} rounded-2xl overflow-hidden border-4 p-1.5 flex flex-col justify-between shadow-2xl select-none transition-shadow ${borderClass}`}
     >
       {/* Background Foil Shimmer Overlay */}
-      {card.foilPattern === 'rainbow_shimmer' && <div className="absolute inset-0 foil-rainbow-shimmer z-10" />}
-      {card.foilPattern === 'textured_gold' && <div className="absolute inset-0 foil-gold-glitter z-10" />}
-      {card.foilPattern === 'holo_sheen' && <div className="absolute inset-0 foil-holo-sheen z-10" />}
-      {card.foilPattern === 'cosmos_stars' && <div className="absolute inset-0 foil-rainbow-shimmer opacity-40 z-10" />}
+      {card.foilPattern === 'rainbow_shimmer' && <div className="absolute inset-0 foil-rainbow-shimmer z-20 pointer-events-none" />}
+      {card.foilPattern === 'textured_gold' && <div className="absolute inset-0 foil-gold-glitter z-20 pointer-events-none" />}
+      {card.foilPattern === 'holo_sheen' && <div className="absolute inset-0 foil-holo-sheen z-20 pointer-events-none" />}
+      {card.foilPattern === 'cosmos_stars' && <div className="absolute inset-0 foil-holo-sheen opacity-60 z-20 pointer-events-none" />}
 
       {/* Dynamic Cursor Glare */}
       {interactive && (
         <div
-          className="absolute inset-0 pointer-events-none z-20 transition-opacity duration-300 opacity-0 group-hover:opacity-100"
+          className="absolute inset-0 pointer-events-none z-30 transition-opacity duration-300 opacity-0 group-hover:opacity-100"
           style={{
-            background: `radial-gradient(circle at ${glarePos.x}% ${glarePos.y}%, rgba(255, 255, 255, 0.35) 0%, transparent 60%)`,
+            background: `radial-gradient(circle at ${glarePos.x}% ${glarePos.y}%, rgba(255, 255, 255, 0.45) 0%, transparent 60%)`,
           }}
         />
       )}
 
-      {/* Card Header */}
-      <div className="relative z-10 flex items-center justify-between p-2 pb-1 bg-black/40 backdrop-blur-xs border-b border-white/10">
-        <div className="flex items-center space-x-1.5 truncate">
-          {card.stage && (
-            <span className="rounded bg-zinc-800 px-1 py-0.2 text-[8px] font-bold uppercase text-zinc-300">
-              {card.stage}
-            </span>
+      {/* Japanese Masterball Mirror Stamp Watermark */}
+      {card.name.includes('Masterball') && (
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none z-20 opacity-35">
+          <div className="flex flex-col items-center text-purple-300">
+            <span className="text-6xl drop-shadow-lg">🟣</span>
+            <span className="font-mono text-[9px] font-black uppercase tracking-widest bg-black/60 px-1 rounded">MASTER BALL</span>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================= */}
+      {/* INNER CARD BODY CONTAINER */}
+      {/* ========================================================= */}
+      <div className="relative z-10 w-full h-full rounded-xl bg-zinc-950 overflow-hidden flex flex-col justify-between border border-black/40 text-zinc-100">
+        
+        {/* ========================================================= */}
+        {/* 1. CARD HEADER: Stage, Name, HP, Energy Type */}
+        {/* ========================================================= */}
+        <div className="px-2.5 py-1 bg-gradient-to-b from-zinc-800 to-zinc-900 border-b border-white/10 flex items-center justify-between shadow-xs">
+          <div className="flex items-center space-x-1.5 truncate">
+            {card.stage && (
+              <span className="rounded bg-black/70 px-1 py-0.2 text-[8px] font-black uppercase text-amber-300 border border-amber-500/30">
+                {card.stage}
+              </span>
+            )}
+            <h4 className="font-black text-white tracking-wide truncate">{card.name}</h4>
+          </div>
+
+          {card.hp && card.pokemonType && (
+            <div className="flex items-center space-x-1 font-mono text-xs font-black shrink-0">
+              <span className="text-[9px] text-zinc-400">HP</span>
+              <span className="text-white text-sm">{card.hp}</span>
+              <EnergyIcon type={card.pokemonType} size="sm" />
+            </div>
           )}
-          <span className="font-bold text-white tracking-wide truncate">{card.name}</span>
         </div>
-        {card.hp && (
-          <div className="flex items-center space-x-1 font-mono text-xs font-black text-rose-300 shrink-0">
-            <span className="text-[9px] text-zinc-400">HP</span>
-            <span>{card.hp}</span>
-            <span className="text-amber-400">{card.illustrationTheme}</span>
-          </div>
-        )}
-      </div>
 
-      {/* Artwork Box */}
-      <div
-        className={`relative z-10 mx-2 my-1.5 overflow-hidden rounded-lg flex items-center justify-center shadow-inner border border-white/15 ${
-          isFullArt ? 'h-[46%]' : 'h-[42%]'
-        }`}
-        style={{
-          background: `radial-gradient(circle, ${card.accentColor}55 0%, #09090b 90%)`,
-        }}
-      >
-        <span className="text-5xl transform transition-transform duration-300 group-hover:scale-115">
-          {card.illustrationTheme}
-        </span>
-        <div className="absolute bottom-1 right-2 text-[9px] font-medium text-white/60">
-          Illus. {card.artist}
+        {/* ========================================================= */}
+        {/* 2. ARTWORK WINDOW */}
+        {/* ========================================================= */}
+        <div
+          className={`relative mx-2 my-1 rounded-lg overflow-hidden flex items-center justify-center border-2 border-zinc-700/80 shadow-inner ${
+            isFullArt ? 'h-[46%]' : 'h-[42%]'
+          }`}
+          style={{
+            background: `radial-gradient(circle at 50% 30%, ${card.accentColor}55 0%, #09090b 95%)`,
+          }}
+        >
+          {/* Artwork Emoji Theme with 3D drop shadow */}
+          <span className="text-5xl sm:text-6xl transform group-hover:scale-110 transition duration-300 drop-shadow-[0_10px_15px_rgba(0,0,0,0.9)]">
+            {card.illustrationTheme}
+          </span>
+
+          {/* Illustrator Credit */}
+          <div className="absolute bottom-1 right-2 text-[8px] font-medium text-white/70 bg-black/60 px-1 rounded backdrop-blur-xs">
+            Illus. {card.artist}
+          </div>
+
+          {/* JP Badge if Japanese */}
+          {card.language === 'JP' && (
+            <div className="absolute top-1 left-2 text-[8px] font-bold text-emerald-300 bg-black/70 px-1 rounded">
+              JP 151
+            </div>
+          )}
         </div>
-        {card.language === 'JP' && (
-          <div className="absolute top-1 left-2 text-[9px] font-semibold text-emerald-300 bg-black/60 px-1 rounded">
-            JP
-          </div>
-        )}
-      </div>
 
-      {/* Attacks / Abilities Section */}
-      <div className="relative z-10 px-2 space-y-1 text-zinc-200">
-        {card.attacks && card.attacks.length > 0 ? (
-          card.attacks.slice(0, 2).map((atk, i) => (
-            <div key={i} className="rounded bg-black/30 p-1 border border-white/5">
-              <div className="flex items-center justify-between text-[11px] font-bold">
-                <span className="text-amber-200 truncate">{atk.name}</span>
-                <span className="font-mono text-amber-400 shrink-0 ml-1">{atk.damage}</span>
+        {/* ========================================================= */}
+        {/* 3. ATTACKS & RULES BOX */}
+        {/* ========================================================= */}
+        <div className="px-2 space-y-1 my-auto">
+          {card.attacks && card.attacks.length > 0 ? (
+            card.attacks.slice(0, 2).map((atk, i) => (
+              <div key={i} className="rounded bg-black/40 p-1 border border-white/5">
+                <div className="flex items-center justify-between text-[11px] font-bold">
+                  {/* Energy Cost Icons */}
+                  <div className="flex items-center space-x-0.5 mr-1">
+                    {atk.cost && atk.cost.length > 0 ? (
+                      atk.cost.map((cType, cIdx) => <EnergyIcon key={cIdx} type={cType} size="xs" />)
+                    ) : (
+                      <span className="text-[8px] text-zinc-500 font-mono">FREE</span>
+                    )}
+                    <span className="text-amber-200 ml-1 truncate">{atk.name}</span>
+                  </div>
+                  <span className="font-mono text-white font-black shrink-0">{atk.damage}</span>
+                </div>
+                {atk.text && (
+                  <p className="text-[8px] text-zinc-400 line-clamp-1 leading-tight mt-0.5">{atk.text}</p>
+                )}
               </div>
-              {atk.text && (
-                <p className="text-[9px] text-zinc-400 line-clamp-1 leading-tight mt-0.5">{atk.text}</p>
+            ))
+          ) : (
+            <div className="rounded bg-black/40 p-1 text-[9px] text-zinc-400 italic">
+              {card.flavorText || 'Standard basic Energy card for powering attacks.'}
+            </div>
+          )}
+        </div>
+
+        {/* ========================================================= */}
+        {/* 4. AUTHENTIC CARD FOOTER */}
+        {/* ========================================================= */}
+        <div className="px-2 py-1 bg-black/80 border-t border-white/10 text-[8px] text-zinc-400 flex flex-col space-y-0.5">
+          {/* Weakness, Resistance, Retreat Row */}
+          <div className="flex items-center justify-between border-b border-white/5 pb-0.5 font-mono text-[8px]">
+            <div className="flex items-center space-x-1">
+              <span>weakness</span>
+              {card.weakness ? (
+                <div className="flex items-center">
+                  <EnergyIcon type={card.weakness.type} size="xs" />
+                  <span className="ml-0.5">{card.weakness.modifier}</span>
+                </div>
+              ) : (
+                <span>none</span>
               )}
             </div>
-          ))
-        ) : (
-          <div className="rounded bg-black/30 p-1 text-[10px] text-zinc-400 italic">
-            {card.flavorText || 'Standard basic Energy card for powering attacks.'}
+            <div>resistance —</div>
+            <div className="flex items-center space-x-0.5">
+              <span>retreat</span>
+              {Array.from({ length: card.retreatCost || 1 }).map((_, rIdx) => (
+                <EnergyIcon key={rIdx} type="Colorless" size="xs" />
+              ))}
+            </div>
           </div>
-        )}
+
+          {/* Set Code, Card Number, Regulation Mark, Value */}
+          <div className="flex items-center justify-between font-mono pt-0.5">
+            <div className="flex items-center space-x-1">
+              <span className="bg-zinc-800 text-white px-1 py-0.2 rounded font-bold">
+                {card.setId.includes('151') ? (isJP ? 'SV2a' : 'MEW') : card.setId.includes('pre') ? 'PRE' : 'CRZ'}
+              </span>
+              <span className="font-bold text-white">#{card.setNumber}/{card.totalInSet}</span>
+              <span className={rarityMeta.color}>{rarityMeta.symbol}</span>
+              <span className="border border-zinc-700 px-0.5 text-zinc-400">[G]</span>
+            </div>
+
+            <span className="text-emerald-400 font-sans font-bold">
+              ${card.estimatedValue.toFixed(2)}
+            </span>
+          </div>
+        </div>
+
       </div>
 
-      {/* Card Footer: Set number, rarity, and price */}
-      <div className="absolute bottom-0 inset-x-0 z-10 flex items-center justify-between p-1.5 bg-black/60 backdrop-blur-xs border-t border-white/10 text-[9px] text-zinc-400 font-mono">
-        <div>
-          <span>#{card.setNumber}</span>
-          <span className="text-zinc-600">/{card.totalInSet}</span>
-        </div>
-        <div className="flex items-center space-x-1">
-          <span className={`font-bold ${rarityMeta.color}`}>
-            {card.rarity === 'hyper_rare' || card.rarity === 'special_illustration_rare' ? '★' : '◆'}
-          </span>
-          <span className="text-amber-300 font-sans font-bold">
-            ${card.estimatedValue.toFixed(2)}
-          </span>
-        </div>
-      </div>
-
-      {/* Duplicates Counter Badge */}
+      {/* Duplicate Count Badge */}
       {showDuplicateBadge && count > 1 && (
-        <div className="absolute top-1 right-1 z-30 flex h-5 px-1.5 items-center justify-center rounded-full bg-amber-500 text-[10px] font-black text-black shadow-lg shadow-amber-500/50 ring-1 ring-white">
+        <div className="absolute top-1 right-1 z-40 flex h-5 px-1.5 items-center justify-center rounded-full bg-amber-500 text-[10px] font-black text-black shadow-lg shadow-amber-500/50 ring-1 ring-white">
           x{count}
         </div>
       )}

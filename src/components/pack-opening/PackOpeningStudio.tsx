@@ -6,6 +6,8 @@ import { OpeningSession, OpeningCardResult } from '@/types';
 import { useGame } from '@/lib/store/game-context';
 import { soundEffects } from '@/lib/audio/sound-effects';
 import { PokemonCardView } from '@/components/ui/PokemonCardView';
+import { BoosterPackFoil } from '@/components/ui/BoosterPackFoil';
+import { PRODUCTS_MAP } from '@/data/products';
 import {
   Sparkles,
   ChevronRight,
@@ -37,6 +39,8 @@ export const PackOpeningStudio: React.FC<PackOpeningStudioProps> = ({
 
   // Check if user still has this pack in inventory for "Open Another"
   const remainingCount = inventory.find((i) => i.productId === session.productId)?.quantity || 0;
+  const product = PRODUCTS_MAP.get(session.productId);
+  const isJP = product?.language === 'JP' || session.productName.includes('(JP)');
 
   // Trigger confetti for high-rarity hits
   const triggerHitCelebration = (rarity: string) => {
@@ -138,35 +142,20 @@ export const PackOpeningStudio: React.FC<PackOpeningStudioProps> = ({
         {phase === 'sealed' && (
           <div className="flex flex-col items-center animate-in zoom-in-95 duration-300">
             
-            {/* The 3D Pack Foil Graphic */}
+            {/* The Authentic Pack Foil */}
             <div
               onClick={handleTearPack}
-              className={`group relative h-96 w-60 rounded-2xl border-2 border-amber-500/60 bg-gradient-to-b from-amber-600 via-rose-700 to-indigo-900 p-4 shadow-2xl shadow-amber-500/20 cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 flex flex-col justify-between overflow-hidden ${
+              className={`relative cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 flex flex-col items-center ${
                 isTearing ? 'pack-tear-top' : ''
               }`}
             >
-              {/* Foil Shimmer */}
-              <div className="absolute inset-0 foil-holo-sheen" />
-
-              {/* Pack Top Crimp */}
-              <div className="relative z-10 flex items-center justify-between border-b border-white/20 pb-2">
-                <span className="text-[10px] font-black tracking-widest text-white/80">10 ADDITIONAL CARDS</span>
-                <span className="text-xs">⚡</span>
-              </div>
-
-              {/* Pack Center Emblem */}
-              <div className="relative z-10 text-center my-auto">
-                <span className="text-7xl block mb-2 drop-shadow-[0_15px_15px_rgba(0,0,0,0.8)]">🎴</span>
-                <h3 className="text-xl font-black text-white tracking-wider uppercase drop-shadow-md">
-                  POKÉMON TCG
-                </h3>
-                <p className="text-[11px] font-extrabold text-amber-200 mt-1">GUARANTEED FOIL HIT</p>
-              </div>
-
-              {/* Pack Bottom Crimp */}
-              <div className="relative z-10 text-center border-t border-white/20 pt-2 text-[9px] font-mono text-white/70">
-                TAP TO OPEN PACK
-              </div>
+              {product ? (
+                <BoosterPackFoil product={product} size="xl" interactive={false} className="shadow-2xl shadow-amber-500/25" />
+              ) : (
+                <div className="h-[440px] w-64 rounded-xl border-2 border-amber-500 bg-zinc-900 flex items-center justify-center">
+                  <span className="text-xl font-bold">POKÉMON TCG</span>
+                </div>
+              )}
             </div>
 
             {/* Instruction button */}
@@ -176,7 +165,7 @@ export const PackOpeningStudio: React.FC<PackOpeningStudioProps> = ({
               className="mt-6 flex items-center space-x-2 rounded-2xl bg-gradient-to-r from-amber-400 to-amber-500 px-8 py-3.5 text-sm font-black text-black shadow-xl shadow-amber-500/30 hover:brightness-110 active:scale-95 transition"
             >
               <Sparkles className="h-4 w-4" />
-              <span>{isTearing ? 'Đang Bóc Gói...' : 'Bóc Gói Thẻ Này'}</span>
+              <span>{isTearing ? 'Đang Xé Vỏ Gói...' : 'Bóc Gói Thẻ Này'}</span>
             </button>
           </div>
         )}
@@ -211,18 +200,53 @@ export const PackOpeningStudio: React.FC<PackOpeningStudioProps> = ({
             {/* The Active Card (Front or Face Down) */}
             <div className="relative cursor-pointer" onClick={handleRevealCard}>
               {!cardRevealed ? (
-                // Face Down Card Back
-                <div className="h-96 w-68 rounded-2xl border-2 border-amber-500/50 bg-gradient-to-br from-indigo-950 via-blue-900 to-slate-900 p-6 flex flex-col items-center justify-center shadow-2xl shadow-indigo-500/20 transform transition hover:scale-103 active:scale-98">
-                  {/* Pokeball graphic on card back */}
-                  <div className="relative flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-b from-red-600 to-white shadow-xl ring-4 ring-black/40">
-                    <div className="h-4 w-full bg-black/80" />
-                    <div className="absolute flex h-10 w-10 items-center justify-center rounded-full bg-white border-4 border-black/80 shadow-md">
-                      <div className="h-4 w-4 rounded-full bg-zinc-200 border-2 border-black/60" />
+                // Authentic 1:1 Face Down Card Back
+                <div className="relative h-[430px] w-[308px] rounded-2xl border-4 border-[#0b132b] bg-[#1c2d5a] p-4 flex flex-col items-center justify-between shadow-2xl shadow-blue-950/60 transform transition hover:scale-102 active:scale-98 overflow-hidden select-none">
+                  {/* Outer subtle frame */}
+                  <div className="absolute inset-1.5 rounded-xl border border-amber-400/30 pointer-events-none" />
+                  
+                  {/* Cosmic Blue Galaxy background */}
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-700/50 via-indigo-950/90 to-[#070b19] pointer-events-none" />
+
+                  {/* Top: Pokémon Logo / Pocket Monsters Header */}
+                  <div className="relative z-10 w-full text-center pt-2">
+                    {isJP ? (
+                      <span className="font-black text-xs tracking-widest text-amber-300 uppercase drop-shadow-md">
+                        ★ POCKET MONSTERS ★
+                      </span>
+                    ) : (
+                      <div className="flex flex-col items-center">
+                        <span className="font-black text-2xl tracking-wider text-amber-400 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] -mb-1">
+                          Pokémon
+                        </span>
+                        <span className="text-[8px] font-bold text-amber-200/80 tracking-widest uppercase">
+                          TRADING CARD GAME
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Center: Iconic Pokéball with Energy Aura */}
+                  <div className="relative z-10 my-auto flex items-center justify-center">
+                    <div className="absolute h-36 w-36 rounded-full bg-cyan-400/20 blur-xl pointer-events-none" />
+                    
+                    {/* Outer Pokéball sphere */}
+                    <div className="relative flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-b from-red-600 0%, #dc2626 50%, #f8fafc 50%, #f8fafc 100%) shadow-2xl ring-4 ring-[#0b132b] overflow-hidden">
+                      {/* Center band */}
+                      <div className="absolute h-3.5 w-full bg-[#0b132b]" />
+                      {/* Center button */}
+                      <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-white border-4 border-[#0b132b] shadow-lg">
+                        <div className="h-3.5 w-3.5 rounded-full bg-zinc-200 border-2 border-[#0b132b]" />
+                      </div>
                     </div>
                   </div>
-                  <span className="mt-8 text-xs font-black tracking-widest text-amber-300 uppercase">
-                    CHẠM ĐỂ LẬT THẺ
-                  </span>
+
+                  {/* Bottom: Tap to reveal */}
+                  <div className="relative z-10 text-center pb-1">
+                    <span className="rounded-full bg-amber-400/20 border border-amber-400/40 px-4 py-1 text-[11px] font-black tracking-widest text-amber-300 uppercase shadow-sm">
+                      CHẠM ĐỂ LẬT THẺ
+                    </span>
+                  </div>
                 </div>
               ) : (
                 // Revealed Front

@@ -3,6 +3,8 @@
 import React from 'react';
 import { Product } from '@/types';
 import { POKEMON_SETS } from '@/data/sets';
+import { BoosterPackFoil } from '@/components/ui/BoosterPackFoil';
+import { SealedBoxProduct } from '@/components/ui/SealedBoxProduct';
 import { ShoppingCart, Info, Star } from 'lucide-react';
 
 interface ProductCardProps {
@@ -13,15 +15,6 @@ interface ProductCardProps {
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onInspect, onQuickBuy }) => {
   const setInfo = POKEMON_SETS.find((s) => s.id === product.setId);
-
-  // Icon and visual container style based on ProductType
-  const typeIcons: Record<string, string> = {
-    booster_pack: '🎴',
-    booster_box: '📦',
-    elite_trainer_box: '🎁',
-    collector_tin: '🛡️',
-    bundle: '👝',
-  };
 
   const isLowStock = product.stock > 0 && product.stock <= 10;
   const isOutOfStock = product.stock <= 0;
@@ -56,28 +49,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onInspect, on
       {/* Visual Product Display (Foil Wrapper / Box) */}
       <div
         onClick={() => onInspect(product)}
-        className="relative mx-auto flex h-44 w-full cursor-pointer items-center justify-center rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950/90 shadow-inner group-hover:border-amber-500/30 transition"
-        style={{
-          background: `radial-gradient(circle at 50% 40%, ${product.accentColor}33 0%, #0d0f12 85%)`,
-        }}
+        className="relative mx-auto flex h-60 w-full cursor-pointer items-center justify-center rounded-xl p-2 group-hover:scale-102 transition duration-300"
       >
-        {/* Glow & Spotlight */}
-        <div className="absolute inset-0 shop-spotlight pointer-events-none" />
-
-        {/* 3D Box / Pack Graphic */}
-        <div className="relative flex flex-col items-center transform transition-transform duration-300 group-hover:scale-108">
-          <span className="text-6xl drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]">
-            {typeIcons[product.productType] || '🎴'}
-          </span>
-          <span className="mt-2 text-[11px] font-black tracking-widest text-zinc-300 uppercase">
-            {setInfo?.code || 'TCG'}
-          </span>
-        </div>
-
-        {/* Pack Count Pill */}
-        <div className="absolute bottom-2 right-2 rounded-lg bg-black/70 px-2 py-0.5 text-[10px] font-bold text-amber-300 border border-white/10 backdrop-blur-xs">
-          {product.contents.boosterPacksCount} {product.contents.boosterPacksCount > 1 ? 'Packs' : 'Pack'}
-        </div>
+        {product.productType === 'booster_pack' ? (
+          <BoosterPackFoil product={product} size="md" interactive={false} />
+        ) : (
+          <SealedBoxProduct product={product} size="md" interactive={false} />
+        )}
       </div>
 
       {/* Product Info */}

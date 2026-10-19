@@ -96,6 +96,8 @@ export interface CardPrinting {
   attacks?: Attack[];
   accentColor: string;
   illustrationTheme: string;
+  weakness?: { type: PokemonEnergyType; modifier: string };
+  retreatCost?: number;
 }
 
 export type ProductType =

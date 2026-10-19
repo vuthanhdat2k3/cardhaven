@@ -47,7 +47,7 @@ const INITIAL_WALLET: Wallet = {
       amount: 1500.0,
       balanceAfter: 1500.0,
       description: 'Starter PokéCoins Grant for Collector Demo',
-      timestamp: new Date().toISOString(),
+      timestamp: '2025-01-01T00:00:00.000Z',
     },
   ],
 };
@@ -57,25 +57,15 @@ const INITIAL_INVENTORY: UserInventoryItem[] = [
     id: 'inv_init_151_pack',
     productId: 'prod-sv151-pack',
     quantity: 2,
-    acquiredAt: new Date().toISOString(),
+    acquiredAt: '2025-01-01T00:00:00.000Z',
   },
   {
     id: 'inv_init_pre_pack',
     productId: 'prod-pre-pack',
     quantity: 1,
-    acquiredAt: new Date().toISOString(),
+    acquiredAt: '2025-01-01T00:00:00.000Z',
   },
 ];
-
-function getStoredState() {
-  if (typeof window === 'undefined') return null;
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    return saved ? JSON.parse(saved) : null;
-  } catch {
-    return null;
-  }
-}
 
 interface GameContextType {
   user: User;
@@ -106,15 +96,36 @@ interface GameContextType {
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
 export function GameProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User>(() => getStoredState()?.user || DEFAULT_USER);
-  const [settings, setSettings] = useState<UserSettings>(() => getStoredState()?.settings || DEFAULT_SETTINGS);
-  const [wallet, setWallet] = useState<Wallet>(() => getStoredState()?.wallet || INITIAL_WALLET);
-  const [inventory, setInventory] = useState<UserInventoryItem[]>(() => getStoredState()?.inventory || INITIAL_INVENTORY);
-  const [collection, setCollection] = useState<UserCollectionEntry[]>(() => getStoredState()?.collection || []);
-  const [openingHistory, setOpeningHistory] = useState<OpeningSession[]>(() => getStoredState()?.openingHistory || []);
+  const [hasHydrated, setHasHydrated] = useState(false);
+  const [user, setUser] = useState<User>(DEFAULT_USER);
+  const [settings, setSettings] = useState<UserSettings>(DEFAULT_SETTINGS);
+  const [wallet, setWallet] = useState<Wallet>(INITIAL_WALLET);
+  const [inventory, setInventory] = useState<UserInventoryItem[]>(INITIAL_INVENTORY);
+  const [collection, setCollection] = useState<UserCollectionEntry[]>([]);
+  const [openingHistory, setOpeningHistory] = useState<OpeningSession[]>([]);
   const [activeOpeningSession, setActiveOpeningSession] = useState<OpeningSession | null>(null);
   const [products, setProducts] = useState<Product[]>(PRODUCTS);
   const [toastMessage, setToastMessage] = useState<{ text: string; type: 'success' | 'error' | 'info' } | null>(null);
+
+  // Load from localStorage on mount (hydration safe)
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.user) setUser(parsed.user);
+        if (parsed.settings) setSettings(parsed.settings);
+        if (parsed.wallet) setWallet(parsed.wallet);
+        if (parsed.inventory) setInventory(parsed.inventory);
+        if (parsed.collection) setCollection(parsed.collection);
+        if (parsed.openingHistory) setOpeningHistory(parsed.openingHistory);
+      }
+    } catch {
+      // ignore error
+    } finally {
+      setHasHydrated(true);
+    }
+  }, []);
 
   const showToast = useCallback((text: string, type: 'success' | 'error' | 'info' = 'info') => {
     setToastMessage({ text, type });
@@ -123,9 +134,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     }, 4000);
   }, []);
 
-  // Persist state to localStorage on state changes
+  // Persist state to localStorage on state changes AFTER hydration
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (!hasHydrated || typeof window === 'undefined') return;
     try {
       localStorage.setItem(
         STORAGE_KEY,
@@ -141,7 +152,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     } catch (e) {
       console.warn('Failed to save state to localStorage:', e);
     }
-  }, [user, settings, wallet, inventory, collection, openingHistory]);
+  }, [hasHydrated, user, settings, wallet, inventory, collection, openingHistory]);
 
   // Sync sound engine config with settings
   useEffect(() => {
